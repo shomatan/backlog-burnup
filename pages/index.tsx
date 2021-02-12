@@ -1,21 +1,21 @@
 import React from 'react';
 import Head from 'next/head';
 import {
-  Avatar,
   Box,
   Button,
-  Checkbox,
   Container,
-  CssBaseline,
   FormControlLabel,
   Grid,
   Link,
   makeStyles,
+  MenuItem,
   Paper,
+  Select,
   TextField,
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
+import { Title } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,18 +82,36 @@ export const Home = (): JSX.Element => {
                   STEP1:
                 </Typography>
                 <form className={classes.form} noValidate>
-                  https://
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="url"
-                    label="Backlog URL"
-                    name="url"
-                    autoComplete="url"
-                    autoFocus
-                  />
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+                    <Box>https://</Box>
+                    <TextField
+                      variant="standard"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="url"
+                      label="Backlog URL"
+                      name="url"
+                      autoComplete="url"
+                      autoFocus
+                    />
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={}
+                      // onChange={handleChange}
+                    >
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                    <Box>.backlog</Box>
+                  </Box>
+
                   <TextField
                     variant="outlined"
                     margin="normal"
