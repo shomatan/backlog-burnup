@@ -1,9 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [
-    "prettier/@typescript-eslint",
-    "prettier/react",
-    "prettier"
+    'prettier/@typescript-eslint',
+    'prettier/react',
+    'prettier'
   ],
   settings: {
     react: {
@@ -24,10 +24,10 @@ module.exports = {
     sourceType: 'module' // Allows for the use of imports
   },
   rules: {
-    "quotes": [
-      "error",
-      "single",
-      { "avoidEscape": true, "allowTemplateLiterals": false }
+    'quotes': [
+      'error',
+      'single',
+      { 'avoidEscape': true, 'allowTemplateLiterals': false }
     ]
   },
   overrides: [
