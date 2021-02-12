@@ -102,7 +102,7 @@ export const Home = (): JSX.Element => {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={}
+                      value={10}
                       // onChange={handleChange}
                     >
                       <MenuItem value={10}>Ten</MenuItem>
