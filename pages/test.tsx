@@ -7,8 +7,12 @@ const fetchProjectInfo = async (projectKey: string): Promise<Project> => {
   return Project(json.name)
 }
 
-const fetchIssueType = (projectKey: String): Promise<Response> =>
-  fetchBacklog(`/api/v2/projects/${projectKey}/issueTypes`);
+const fetchIssueType = async (projectKey: String): Promise<ReadonlyArray<IssueType>> => {
+  const res = await fetchBacklog(`/api/v2/projects/${projectKey}/issueTypes`);
+  const json = await res.json();
+
+  return json.map((item: any) => IssueType(item.id, item.name))
+}
 
 const fetchMilestones = (projectKey: string): Promise<Response> =>
   fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
@@ -36,8 +40,34 @@ const ProjectComponent = ({projectKey}): JSX.Element => {
   return <h3>Project: {project.name}</h3>;
 };
 
+interface IssueType {
+  readonly id: number;
+  readonly name: string;
+}
+const IssueType = (id: number, name: string): IssueType => ({id, name})
+
+const IssueTypesComponent = ({projectKey}): JSX.Element => {
+  const [issueTypes, setIssueTypes] = useState<ReadonlyArray<IssueType>>(null);
+
+  const list = (items: ReadonlyArray<IssueType>) => {
+    if (!items) return <></>;
+    return items.map((item) => <li key={item.id}>{item.name}</li>);
+  };
+
+  useEffect(() => {
+    if (issueTypes) return;
+    (async () => {
+      setIssueTypes(await fetchIssueType(projectKey));
+    })();
+  }, [issueTypes]);
+
+  return <>
+    <h3>Issue Types</h3>
+  {list(issueTypes)}
+  </>
+}
+
 const Test = (): JSX.Element => {
-  const [issueTypes, setIssueTypes] = useState(null);
   const [milestones, setMilestones] = useState(null);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
@@ -46,15 +76,7 @@ const Test = (): JSX.Element => {
     return items.map((item) => <li key={item.id}>{item.name}</li>);
   };
 
-  useEffect(() => {
-    if (issueTypes) return;
-    (async () => {
-      const res = await fetchIssueType(projectKey);
-      setIssueTypes(await res.json());
-    })();
-  }, [issueTypes]);
-
-  useEffect(() => {
+    useEffect(() => {
     if (milestones) return;
     (async () => {
       const res = await fetchMilestones(projectKey);
@@ -67,6 +89,7 @@ const Test = (): JSX.Element => {
     <div>
       <h1>Backlog Burn Up</h1>
       <ProjectComponent projectKey={projectKey} />
+      <IssueTypesComponent projectKey={projectKey} />
       <h3>Milestones</h3>
       {milestoneItems(milestones)}
     </div>
