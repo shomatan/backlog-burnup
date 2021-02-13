@@ -11,6 +11,11 @@ const fetchBacklog = (endpoint: string): Promise<Response> =>
 const Test = (): JSX.Element => {
   const [milestones, setMilestones] = useState(null);
 
+  const milestoneItems = (items: Array<any>) => {
+    if (!items) return <></>;
+    return items.map((item) => <li>{item.name}</li>)
+  }
+
   useEffect(() => {
     if (milestones) return;
     (async () => {
@@ -22,7 +27,9 @@ const Test = (): JSX.Element => {
     })();
   }, [milestones]);
 
-  return <div>{milestones[0].name}</div>;
+  return (
+    <div>{milestoneItems(milestones)}</div>
+  );
 };
 
 export default Test;
