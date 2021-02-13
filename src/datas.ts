@@ -11,14 +11,14 @@ export interface Issue {
   readonly key: string;
   readonly summary: string;
   readonly point: number;
-  readonly milestones: ReadonlyArray<Milestone>;
+  readonly milestones: ReadonlyArray<BacklogMilestone>;
 }
 export const Issue = (
   id: number,
   key: string,
   summary: string,
   point: number,
-  milestones: ReadonlyArray<Milestone>
+  milestones: ReadonlyArray<BacklogMilestone>
 ): Issue => ({
   id,
   key,
@@ -30,7 +30,7 @@ export const Issue = (
 export const sumPoint = (issues: List<Issue>): number =>
   issues
     .map((issue: Issue) => issue.point)
-    .reduce((sum: number, current: number) => sum + current);
+    .reduce((sum: number, current: number) => sum + current, 0);
 
 export interface IssueType {
   readonly id: number;
@@ -41,11 +41,23 @@ export const IssueType = (id: number, name: string): IssueType => ({
   name,
 });
 
-export interface Milestone {
+export interface BacklogMilestone {
   readonly id: number;
   readonly name: string;
 }
-export const Milestone = (id: number, name: string): Milestone => ({
+export const BacklogMilestone = (
+  id: number,
+  name: string
+): BacklogMilestone => ({
   id,
   name,
 });
+
+export interface Milestone {
+  readonly backlogMilestone: BacklogMilestone;
+  readonly totalPoint: number;
+}
+export const Milestone = (
+  backlogMilestone: BacklogMilestone,
+  totalPoint: number
+): Milestone => ({ backlogMilestone, totalPoint });
