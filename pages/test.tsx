@@ -25,6 +25,9 @@ const Test = (): JSX.Element => {
   >(null);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
+  const projectBegin = new Date(2021, 1, 5);
+  const sprintDays = 7;
+
   const onIssueTypeChange = async (
     e: React.ChangeEvent<HTMLSelectElement>
   ): Promise<void> => {
@@ -72,8 +75,14 @@ const Test = (): JSX.Element => {
 
   return (
     <div>
-      <h1>Backlog Burn Up</h1>
-      <ProjectComponent projectKey={projectKey} setProjectId={setProjectId} />
+      <section>
+        <h1>Backlog Burn Up</h1>
+      </section>
+      <section>
+        <ProjectComponent projectKey={projectKey} setProjectId={setProjectId} />
+        <p>Project begin: {projectBegin.toLocaleDateString('ja')}</p>
+        <p>Days per Sprint: {sprintDays} days / sprint</p>
+      </section>
       <IssueTypesComponent
         projectKey={projectKey}
         onChange={onIssueTypeChange}
