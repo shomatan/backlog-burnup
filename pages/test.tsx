@@ -41,7 +41,7 @@ const Test = (): JSX.Element => {
         projectKey={projectKey}
         onChange={onIssueTypeChange}
       />
-      <MilestonesComponent projectKey={projectKey} />
+      <MilestonesComponent projectKey={projectKey} issues={issues} />
       <IssuesComponent issues={issues} />
     </div>
   );

@@ -34,6 +34,7 @@ export const fetchIssuesOfIssueType = async (
   const res = await fetchBacklog('/api/v2/issues', [
     `projectId[]=${projectId}`,
     `issueTypeId[]=${issueTypeId}`,
+    'count=100',
   ]);
   const json = await res.json();
 
