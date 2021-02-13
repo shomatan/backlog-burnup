@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 const fetchProjectInfo = (projectKey: string): Promise<Response> =>
   fetchBacklog(`/api/v2/projects/${projectKey}`);
 
+const fetchIssueType = (projectKey: String): Promise<Response> =>
+  fetchBacklog(`/api/v2/projects/${projectKey}/issueTypes`);
+
 const fetchMilestones = (projectKey: string): Promise<Response> =>
   fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
 
@@ -11,30 +14,48 @@ const fetchBacklog = (endpoint: string): Promise<Response> =>
     `${process.env.BACKLOG_URL}${endpoint}?apiKey=${process.env.BACKLOG_API_KEY}`
   );
 
-const Test = (): JSX.Element => {
-  const [project, setProject] = useState(null);
-  const [milestones, setMilestones] = useState(null);
+interface Project {
+  readonly name: string;
+}
+const Project = (name: string): Project => ({ name });
 
-  const milestoneItems = (items: Array<any>) => {
-    if (!items) return <></>;
-    return items.map((item) => <li>{item.name}</li>)
-  }
-  
+const ProjectComponent = ({projectKey}): JSX.Element => {
+  const [project, setProject] = useState(Project(''));
+
   useEffect(() => {
-    if (project) return;
+    if (project.name !== '') return;
     (async () => {
-      const res = await fetchProjectInfo(process.env.BACKLOG_PROJECT_KEY);
+      const res = await fetchProjectInfo(projectKey);
       setProject(await res.json());
     })();
   }, [project]);
-  
+
+  return <h3>Project: {project.name}</h3>;
+};
+
+const Test = (): JSX.Element => {
+  const [issueTypes, setIssueTypes] = useState(null);
+  const [milestones, setMilestones] = useState(null);
+
+  const projectKey = process.env.BACKLOG_PROJECT_KEY;
+  const milestoneItems = (items: Array<any>) => {
+    if (!items) return <></>;
+    return items.map((item) => <li>{item.name}</li>);
+  };
+
+  useEffect(() => {
+    if (issueTypes) return;
+    (async () => {
+      const res = await fetchIssueType(projectKey);
+      setIssueTypes(await res.json());
+    })();
+  }, [issueTypes]);
+
   useEffect(() => {
     if (milestones) return;
     (async () => {
-      const res = await fetchMilestones(process.env.BACKLOG_PROJECT_KEY);
+      const res = await fetchMilestones(projectKey);
       const json = await res.json();
-
-      console.dir(json);
       setMilestones(json);
     })();
   }, [milestones]);
@@ -42,7 +63,7 @@ const Test = (): JSX.Element => {
   return (
     <div>
       <h1>Backlog Burn Up</h1>
-      <h3>Project: {project.name}</h3>
+      <ProjectComponent projectKey={projectKey} />
       <h3>Milestones</h3>
       {milestoneItems(milestones)}
     </div>
