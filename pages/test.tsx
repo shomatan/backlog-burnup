@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 
-const fetchProjectInfo = (projectKey: string): Promise<Response> =>
-  fetchBacklog(`/api/v2/projects/${projectKey}`);
+const fetchProjectInfo = async (projectKey: string): Promise<Project> => {
+  const res = await fetchBacklog(`/api/v2/projects/${projectKey}`)
+  const json = await res.json();
+  
+  return Project(json.name)
+}
 
 const fetchIssueType = (projectKey: String): Promise<Response> =>
   fetchBacklog(`/api/v2/projects/${projectKey}/issueTypes`);
@@ -25,8 +29,7 @@ const ProjectComponent = ({projectKey}): JSX.Element => {
   useEffect(() => {
     if (project.name !== '') return;
     (async () => {
-      const res = await fetchProjectInfo(projectKey);
-      setProject(await res.json());
+      setProject(await fetchProjectInfo(projectKey));
     })();
   }, [project]);
 
@@ -40,7 +43,7 @@ const Test = (): JSX.Element => {
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
   const milestoneItems = (items: Array<any>) => {
     if (!items) return <></>;
-    return items.map((item) => <li>{item.name}</li>);
+    return items.map((item) => <li key={item.id}>{item.name}</li>);
   };
 
   useEffect(() => {
