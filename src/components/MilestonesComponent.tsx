@@ -1,19 +1,34 @@
 import { useEffect, useState } from 'react';
-import { Issue, Milestone } from '../datas';
+import { Issue, List, Milestone, sumPoint } from '../datas';
 import { fetchMilestones } from '../network/BacklogAPI';
 
 interface Props {
   readonly projectKey: string;
-  readonly issues: ReadonlyArray<Issue>;
+  readonly issues: List<Issue>;
 }
 
 export const MilestonesComponent = (props: Props): JSX.Element => {
-  const [milestones, setMilestones] = useState<ReadonlyArray<Milestone>>(null);
+  const [milestones, setMilestones] = useState<List<Milestone>>(null);
 
-  const milestoneItems = (items: ReadonlyArray<Milestone>) => {
+  const milestoneItems = (items: List<Milestone>) => {
     if (!items) return <></>;
     return items.map((item) => {
-      return <li key={item.id}>{item.name}</li>;
+      let point = 0;
+
+      if (props.issues) {
+        const milestoneIssues = props.issues.filter(
+          (issue: Issue) =>
+            issue.milestones.findIndex(
+              (milestone) => item.id == milestone.id
+            ) != -1
+        );
+        point = sumPoint(milestoneIssues);
+      }
+      return (
+        <li key={item.id}>
+          [{point}] {item.name}
+        </li>
+      );
     });
   };
 

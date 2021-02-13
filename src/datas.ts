@@ -1,3 +1,5 @@
+export type List<A> = ReadonlyArray<A>;
+
 export interface Project {
   readonly id: number;
   readonly name: string;
@@ -24,6 +26,11 @@ export const Issue = (
   point,
   milestones,
 });
+
+export const sumPoint = (issues: List<Issue>): number =>
+  issues
+    .map((issue: Issue) => issue.point)
+    .reduce((sum: number, current: number) => sum + current);
 
 export interface IssueType {
   readonly id: number;

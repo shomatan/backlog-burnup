@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Issue } from '../datas';
+import { Issue, sumPoint } from '../datas';
 
 export const IssuesComponent = ({ issues }): JSX.Element => {
   const [total, setTotal] = useState(0);
@@ -16,11 +16,7 @@ export const IssuesComponent = ({ issues }): JSX.Element => {
 
   useEffect(() => {
     if (!issues) return;
-    setTotal(
-      issues
-        .map((issue: Issue) => issue.point)
-        .reduce((sum: number, current: number) => sum + current)
-    );
+    setTotal(sumPoint(issues));
   }, [issues]);
 
   return (
