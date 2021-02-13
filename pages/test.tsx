@@ -78,7 +78,14 @@ const Test = (): JSX.Element => {
             milestone.backlogMilestone.name.includes('Sprint') &&
             milestone.backlogMilestone.startDate
         )
+        .sort((n1, n2) => {
+          return (
+            n1.backlogMilestone.startDate.getTime() -
+            n2.backlogMilestone.startDate.getTime()
+          );
+        })
         .map((milestone: Milestone) => {
+          console.dir(milestone);
           let item = {
             name: milestone.backlogMilestone.startDate.toLocaleDateString('ja'),
           };

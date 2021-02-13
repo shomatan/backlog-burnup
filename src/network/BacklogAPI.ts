@@ -24,9 +24,13 @@ export const fetchMilestones = async (
   const res = await fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
   const json = await res.json();
 
-  return json.map((item: any) =>
-    BacklogMilestone(item.id, item.name, new Date(item.startDate))
-  );
+  return json.map((item: any) => {
+    let date = null;
+    if (item.startDate) {
+      date = new Date(item.startDate);
+    }
+    return BacklogMilestone(item.id, item.name, date);
+  });
 };
 
 export const fetchIssuesOfIssueType = async (
