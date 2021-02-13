@@ -72,6 +72,8 @@ const Test = (): JSX.Element => {
 
       console.log('computed: %o', computed);
       // set graph
+      let latest = 0;
+      let sum = 0;
       const datas = computed
         .filter(
           (milestone: Milestone) =>
@@ -85,13 +87,19 @@ const Test = (): JSX.Element => {
           );
         })
         .map((milestone: Milestone) => {
-          console.dir(milestone);
           let item = {
             name: milestone.backlogMilestone.startDate.toLocaleDateString('ja'),
           };
-
+          const current = milestone.totalPoint;
+          if (current > 0) {
+            latest = current;
+            sum = sum + current;
+          } else {
+            sum = sum + latest;
+          }
           releaseItems.map((release: Milestone) => {
             item[release.backlogMilestone.name] = release.totalPoint;
+            item['forecast'] = sum;
           });
 
           return item;
@@ -152,6 +160,7 @@ const Test = (): JSX.Element => {
           <YAxis />
           <Tooltip />
           <Legend />
+          <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
           {(() => {
             return releases.map((release: Milestone) => (
               <Line type="monotone" dataKey={release.backlogMilestone.name} />
