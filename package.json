@@ -8,14 +8,14 @@
     "build": "next build && next build",
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
+    "lint": "eslint './{lib,src,test,pages}/**/*.{ts,tsx}'",
     "fmt": "eslint --fix './{lib,src,test,pages}/**/*.{ts,tsx}' && prettier --write './{lib,src,test,pages}/**/*.{ts,tsx}'",
     "test": "jest",
-    "test-all": "yarn fmt && yarn type-check && yarn test"
+    "test-all": "yarn lint && yarn type-check && yarn test"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn run type-check"
+      "pre-commit": "yarn lint && yarn type-check"
     }
   },
   "lint-staged": {
