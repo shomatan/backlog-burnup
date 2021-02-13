@@ -9,22 +9,20 @@ const fetchBacklog = (endpoint: string): Promise<Response> =>
   );
 
 const Test = (): JSX.Element => {
-  /* console.dir(res.json()); */
-  const [milestones, setMilestones] = useState([]);
+  const [milestones, setMilestones] = useState(null);
 
   useEffect(() => {
+    if (milestones) return;
     (async () => {
       const res = await fetchMilestones(process.env.BACKLOG_PROJECT_KEY);
       const json = await res.json();
 
       console.dir(json);
       setMilestones(json);
-
-      /* if (!didCancel) setMessage(res); */
     })();
   }, [milestones]);
 
-  return <div>{milestones}</div>;
+  return <div>{milestones[0].name}</div>;
 };
 
 export default Test;
