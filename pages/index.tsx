@@ -16,6 +16,20 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { Title } from '@material-ui/icons';
+import { Global, css } from '@emotion/react'
+
+export const GlobalStyle = css`
+  html {
+    font-size: 62.5%;
+    font-family: "游ゴシック Medium", YuGothic, YuGothicM,
+      "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo,
+      sans-serif;
+  }
+  body {
+    font-size: 1.8rem;
+    color: #444;
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,91 +81,94 @@ export const Home = (): JSX.Element => {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
-    <div className="container">
-      <Head>
-        <title>Backlog Burn Up</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <body>
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Typography component="h1" variant="h5">
-                  STEP1:
-                </Typography>
-                <form className={classes.form} noValidate>
-                  <Box
-                    display="flex"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                  >
-                    <Box>https://</Box>
+    <>
+      <Global styles={GlobalStyle} />
+      <div className="container">
+        <Head>
+          <title>Backlog Burn Up</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <body>
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              {/* Chart */}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper className={fixedHeightPaper}>
+                  <Typography component="h1" variant="h5">
+                    STEP1:
+                  </Typography>
+                  <form className={classes.form} noValidate>
+                    <Box
+                      display="flex"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                    >
+                      <Box>https://</Box>
+                      <TextField
+                        variant="standard"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="url"
+                        label="Backlog URL"
+                        name="url"
+                        autoComplete="url"
+                        autoFocus
+                      />
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={10}
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
+                      </Select>
+                      <Box>.backlog</Box>
+                    </Box>
+
                     <TextField
-                      variant="standard"
+                      variant="outlined"
                       margin="normal"
                       required
                       fullWidth
-                      id="url"
-                      label="Backlog URL"
-                      name="url"
-                      autoComplete="url"
-                      autoFocus
+                      name="key"
+                      label="API Key"
+                      type="password"
+                      id="key"
+                      autoComplete="current-password"
                     />
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={10}
-                      // onChange={handleChange}
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                    <Box>.backlog</Box>
-                  </Box>
-
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="key"
-                    label="API Key"
-                    type="password"
-                    id="key"
-                    autoComplete="current-password"
-                  />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                  >
-                    Get Backlog data
-                  </Button>
-                </form>
-              </Paper>
+                      Get Backlog data
+                    </Button>
+                  </form>
+                </Paper>
+              </Grid>
+              {/* Config */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <Typography component="h1" variant="h5">
+                    STEP2:
+                  </Typography>
+                </Paper>
+              </Grid>
+              {/* Chart */}
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>{/* <Orders /> */}</Paper>
+              </Grid>
             </Grid>
-            {/* Config */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Typography component="h1" variant="h5">
-                  STEP2:
-                </Typography>
-              </Paper>
-            </Grid>
-            {/* Chart */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>{/* <Orders /> */}</Paper>
-            </Grid>
-          </Grid>
-        </Container>
-        <div className={classes.paper}></div>
-      </body>
-    </div>
+          </Container>
+          <div className={classes.paper}></div>
+        </body>
+      </div>
+    </>
   );
 };
 
