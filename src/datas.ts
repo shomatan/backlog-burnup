@@ -44,13 +44,16 @@ export const IssueType = (id: number, name: string): IssueType => ({
 export interface BacklogMilestone {
   readonly id: number;
   readonly name: string;
+  readonly startDate: Date;
 }
 export const BacklogMilestone = (
   id: number,
-  name: string
+  name: string,
+  startDate: Date
 ): BacklogMilestone => ({
   id,
   name,
+  startDate,
 });
 
 export interface Milestone {
