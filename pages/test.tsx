@@ -88,7 +88,9 @@ const Test = (): JSX.Element => {
         })
         .map((milestone: Milestone) => {
           let item = {
-            name: milestone.backlogMilestone.startDate.toLocaleDateString('ja'),
+            name: milestone.backlogMilestone.releaseDueDate.toLocaleDateString(
+              'ja'
+            ),
           };
           const current = milestone.totalPoint;
           if (current > 0) {

@@ -26,11 +26,21 @@ export const fetchMilestones = async (
 
   return json
     .map((item: any) => {
-      let date = null;
+      let startDate = null;
       if (item.startDate) {
-        date = new Date(item.startDate);
+        startDate = new Date(item.startDate);
       }
-      return BacklogMilestone(item.id, item.name, date, item.archived);
+      let releaseDueDate = null;
+      if (item.releaseDueDate) {
+        releaseDueDate = new Date(item.releaseDueDate);
+      }
+      return BacklogMilestone(
+        item.id,
+        item.name,
+        startDate,
+        releaseDueDate,
+        item.archived
+      );
     })
     .filter((item: BacklogMilestone) => !item.archived);
 };
@@ -48,7 +58,13 @@ export const fetchIssuesOfIssueType = async (
 
   return json.map((item: any) => {
     const milestones = item.milestone.map((m: any) =>
-      BacklogMilestone(m.id, m.name, new Date(m.startDate), m.archived)
+      BacklogMilestone(
+        m.id,
+        m.name,
+        new Date(m.startDate),
+        new Date(m.releaseDueDate),
+        m.archived
+      )
     );
     return Issue(
       item.id,
