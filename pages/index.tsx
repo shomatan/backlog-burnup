@@ -16,13 +16,13 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import { Title } from '@material-ui/icons';
-import { Global, css } from '@emotion/react'
+import { Global, css } from '@emotion/react';
 
 export const GlobalStyle = css`
   html {
     font-size: 62.5%;
-    font-family: "游ゴシック Medium", YuGothic, YuGothicM,
-      "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", メイリオ, Meiryo,
+    font-family: '游ゴシック Medium', YuGothic, YuGothicM,
+      'Hiragino Kaku Gothic ProN', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo,
       sans-serif;
   }
   body {
