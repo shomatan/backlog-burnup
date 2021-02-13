@@ -48,7 +48,12 @@ interface IssueType {
 }
 const IssueType = (id: number, name: string): IssueType => ({ id, name });
 
-const IssueTypesComponent = ({ projectKey }): JSX.Element => {
+interface IssueTypesProps {
+  readonly projectKey: string;
+  readonly onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+const IssueTypesComponent = (props: IssueTypesProps): JSX.Element => {
   const [issueTypes, setIssueTypes] = useState<ReadonlyArray<IssueType>>(null);
 
   const list = (items: ReadonlyArray<IssueType>) => {
@@ -63,14 +68,16 @@ const IssueTypesComponent = ({ projectKey }): JSX.Element => {
   useEffect(() => {
     if (issueTypes) return;
     (async () => {
-      setIssueTypes(await fetchIssueType(projectKey));
+      setIssueTypes(await fetchIssueType(props.projectKey));
     })();
   }, [issueTypes]);
 
   return (
     <>
       <h3>Issue Types</h3>
-      <select name="issueTypes">{list(issueTypes)}</select>
+      <select name="issueTypes" onChange={props.onChange}>
+        {list(issueTypes)}
+      </select>
     </>
   );
 };
@@ -82,6 +89,9 @@ const Test = (): JSX.Element => {
   const milestoneItems = (items: Array<any>) => {
     if (!items) return <></>;
     return items.map((item) => <li key={item.id}>{item.name}</li>);
+  };
+  const onIssueTypeChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    console.log(e.target.value);
   };
 
   useEffect(() => {
@@ -97,9 +107,13 @@ const Test = (): JSX.Element => {
     <div>
       <h1>Backlog Burn Up</h1>
       <ProjectComponent projectKey={projectKey} />
-      <IssueTypesComponent projectKey={projectKey} />
+      <IssueTypesComponent
+        projectKey={projectKey}
+        onChange={onIssueTypeChange}
+      />
       <h3>Milestones</h3>
       {milestoneItems(milestones)}
+      <h3>Issues</h3>
     </div>
   );
 };
