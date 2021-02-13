@@ -87,6 +87,7 @@ export const Home = (): JSX.Element => {
         <Head>
           <title>Backlog Burn Up</title>
           <link rel="icon" href="/favicon.ico" />
+          <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
         </Head>
         <body>
           <Container maxWidth="lg" className={classes.container}>
