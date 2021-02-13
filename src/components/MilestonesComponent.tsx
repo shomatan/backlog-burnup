@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Milestone } from '../datas';
 import { fetchMilestones } from '../network/BacklogAPI';
 
 export const MilestonesComponent = ({ projectKey }): JSX.Element => {
-  const [milestones, setMilestones] = useState(null);
+  const [milestones, setMilestones] = useState<ReadonlyArray<Milestone>>(null);
 
-  const milestoneItems = (items: Array<any>) => {
+  const milestoneItems = (items: ReadonlyArray<Milestone>) => {
     if (!items) return <></>;
     return items.map((item) => <li key={item.id}>{item.name}</li>);
   };
@@ -12,9 +13,7 @@ export const MilestonesComponent = ({ projectKey }): JSX.Element => {
   useEffect(() => {
     if (milestones) return;
     (async () => {
-      const res = await fetchMilestones(projectKey);
-      const json = await res.json();
-      setMilestones(json);
+      setMilestones(await fetchMilestones(projectKey));
     })();
   }, [milestones]);
 

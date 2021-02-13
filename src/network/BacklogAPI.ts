@@ -1,4 +1,4 @@
-import { Issue, IssueType, Project } from '../datas';
+import { Issue, IssueType, Milestone, Project } from '../datas';
 
 export const fetchProjectInfo = async (
   projectKey: string
@@ -18,8 +18,14 @@ export const fetchIssueType = async (
   return json.map((item: any) => IssueType(item.id, item.name));
 };
 
-export const fetchMilestones = (projectKey: string): Promise<Response> =>
-  fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
+export const fetchMilestones = async (
+  projectKey: string
+): Promise<ReadonlyArray<Milestone>> => {
+  const res = await fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
+  const json = await res.json();
+
+  return json.map((item: any) => Milestone(item.id, item.name));
+};
 
 export const fetchIssuesOfIssueType = async (
   projectId: number,
@@ -31,7 +37,16 @@ export const fetchIssuesOfIssueType = async (
   ]);
   const json = await res.json();
 
-  return json.map((item: any) => Issue(item.id, item.key, item.summary));
+  return json.map((item: any) => {
+    const milestones = item.milestone.map((m: any) => Milestone(m.id, m.name));
+    return Issue(
+      item.id,
+      item.key,
+      item.summary,
+      item.estimatedHours,
+      milestones
+    );
+  });
 };
 
 const fetchBacklog = (
