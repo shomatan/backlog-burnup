@@ -53,7 +53,11 @@ const IssueTypesComponent = ({ projectKey }): JSX.Element => {
 
   const list = (items: ReadonlyArray<IssueType>) => {
     if (!items) return <></>;
-    return items.map((item) => <li key={item.id}>{item.name}</li>);
+    return items.map((item) => (
+      <option key={item.id} value={item.id}>
+        {item.name}
+      </option>
+    ));
   };
 
   useEffect(() => {
@@ -66,7 +70,7 @@ const IssueTypesComponent = ({ projectKey }): JSX.Element => {
   return (
     <>
       <h3>Issue Types</h3>
-      {list(issueTypes)}
+      <select name="issueTypes">{list(issueTypes)}</select>
     </>
   );
 };
