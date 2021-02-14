@@ -1,5 +1,6 @@
 import React from 'react';
-import Head from 'next/head';
+// import Head from 'next/head';
+import Header from '../src/components/organisms/header';
 import {
   Box,
   Button,
@@ -83,12 +84,8 @@ export const Home = (): JSX.Element => {
   return (
     <>
       <Global styles={GlobalStyle} />
+      <Header />
       <div className="container">
-        <Head>
-          <title>Backlog Burn Up</title>
-          <link rel="icon" href="/favicon.ico" />
-          <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
-        </Head>
         <body>
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
