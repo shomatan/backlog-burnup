@@ -25,8 +25,24 @@ import {
   fetchMilestones,
 } from '../src/network/BacklogAPI';
 
+const sortMilestones = (milestones: List<Milestone>): List<Milestone> =>
+  milestones
+    .filter(
+      (milestone: Milestone) =>
+        milestone.backlogMilestone.name.includes('Sprint') &&
+        milestone.backlogMilestone.startDate &&
+        milestone.backlogMilestone.releaseDueDate
+    )
+    .sort((n1, n2) => {
+      return (
+        n1.backlogMilestone.startDate.getTime() -
+        n2.backlogMilestone.startDate.getTime()
+      );
+    });
+
 const Test = (): JSX.Element => {
   const [projectId, setProjectId] = useState(null);
+  const [projectStartDate, setProjectStartDate] = useState<Date>(null);
   const [issueTypeId, setIssueTypeId] = useState(null);
   const [issues, setIssues] = useState(null);
   const [milestones, setMilestones] = useState(null);
@@ -37,7 +53,6 @@ const Test = (): JSX.Element => {
   const [data, setData] = useState([]);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
-  const projectBegin = new Date(2021, 1, 5);
   const sprintDays = 7;
 
   const onIssueTypeChange = async (
@@ -74,24 +89,13 @@ const Test = (): JSX.Element => {
       // set graph
       let latest = 0;
       let sum = 0;
-      const sortedMilestones = computed
-        .filter(
-          (milestone: Milestone) =>
-            milestone.backlogMilestone.name.includes('Sprint') &&
-            milestone.backlogMilestone.startDate &&
-            milestone.backlogMilestone.releaseDueDate
-        )
-        .sort((n1, n2) => {
-          return (
-            n1.backlogMilestone.startDate.getTime() -
-            n2.backlogMilestone.startDate.getTime()
-          );
-        });
+      const sortedMilestones = sortMilestones(computed);
 
       let array = [];
       if (sortedMilestones.length > 0) {
+        const milestone = sortedMilestones[0].backlogMilestone;
         let item = {
-          name: dateString(sortedMilestones[0].backlogMilestone.startDate),
+          name: dateString(milestone.startDate),
         };
         releaseItems.map((release: Milestone) => {
           item[release.backlogMilestone.name] = release.totalPoint;
@@ -135,7 +139,11 @@ const Test = (): JSX.Element => {
     (async () => {
       const items = await fetchMilestones(projectKey);
       const computed = items.map((item) => Milestone(item, 0));
+      const sorted = sortMilestones(computed);
 
+      if (sorted.length > 0) {
+        setProjectStartDate(sorted[0].backlogMilestone.startDate);
+      }
       setBacklogMilestones(items);
       setMilestones(computed);
     })();
@@ -148,7 +156,14 @@ const Test = (): JSX.Element => {
       </section>
       <section>
         <ProjectComponent projectKey={projectKey} setProjectId={setProjectId} />
-        <p>Project begin: {projectBegin.toLocaleDateString('ja')}</p>
+        <p>
+          Project begin:
+          {(() => {
+            if (projectStartDate) {
+              return dateString(projectStartDate);
+            }
+          })()}
+        </p>
         <p>Days per Sprint: {sprintDays} days / sprint</p>
       </section>
       <IssueTypesComponent
