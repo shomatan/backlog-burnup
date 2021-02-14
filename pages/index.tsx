@@ -52,6 +52,7 @@ const App = styled.div({
 
 const Main = styled.div({
   gridArea: 'Main',
+  padding: '40px 26px 30px',
 });
 
 const useStyles = makeStyles((theme) => ({
