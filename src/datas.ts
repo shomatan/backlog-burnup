@@ -45,17 +45,20 @@ export interface BacklogMilestone {
   readonly id: number;
   readonly name: string;
   readonly startDate: Date;
+  readonly releaseDueDate: Date;
   readonly archived: boolean;
 }
 export const BacklogMilestone = (
   id: number,
   name: string,
   startDate: Date,
+  releaseDueDate: Date,
   archived: boolean
 ): BacklogMilestone => ({
   id,
   name,
   startDate,
+  releaseDueDate,
   archived,
 });
 
