@@ -92,10 +92,9 @@ const Test = (): JSX.Element => {
       const sortedMilestones = sortMilestones(computed);
 
       let array = [];
-      if (sortedMilestones.length > 0) {
-        const milestone = sortedMilestones[0].backlogMilestone;
+      if (projectStartDate) {
         let item = {
-          name: dateString(milestone.startDate),
+          name: dateString(projectStartDate),
         };
         releaseItems.map((release: Milestone) => {
           item[release.backlogMilestone.name] = release.totalPoint;
