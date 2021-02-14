@@ -14,6 +14,7 @@ import { MilestonesComponent } from '../src/components/MilestonesComponent';
 import { ProjectComponent } from '../src/components/ProjectComponent';
 import {
   BacklogMilestone,
+  dateString,
   Issue,
   List,
   Milestone,
@@ -70,45 +71,55 @@ const Test = (): JSX.Element => {
       );
       setReleases(releaseItems);
 
-      console.log('computed: %o', computed);
       // set graph
       let latest = 0;
       let sum = 0;
-      const datas = computed
+      const sortedMilestones = computed
         .filter(
           (milestone: Milestone) =>
             milestone.backlogMilestone.name.includes('Sprint') &&
-            milestone.backlogMilestone.startDate
+            milestone.backlogMilestone.startDate &&
+            milestone.backlogMilestone.releaseDueDate
         )
         .sort((n1, n2) => {
           return (
             n1.backlogMilestone.startDate.getTime() -
             n2.backlogMilestone.startDate.getTime()
           );
-        })
-        .map((milestone: Milestone) => {
-          let item = {
-            name: milestone.backlogMilestone.releaseDueDate.toLocaleDateString(
-              'ja'
-            ),
-          };
-          const current = milestone.totalPoint;
-          if (current > 0) {
-            latest = current;
-            sum = sum + current;
-          } else {
-            sum = sum + latest;
-          }
-          releaseItems.map((release: Milestone) => {
-            item[release.backlogMilestone.name] = release.totalPoint;
-            item['forecast'] = sum;
-          });
-
-          return item;
         });
 
-      console.dir(datas);
-      setData(datas);
+      let array = [];
+      if (sortedMilestones.length > 0) {
+        let item = {
+          name: dateString(sortedMilestones[0].backlogMilestone.startDate),
+        };
+        releaseItems.map((release: Milestone) => {
+          item[release.backlogMilestone.name] = release.totalPoint;
+          item['forecast'] = 0;
+        });
+        array.push(item);
+      }
+
+      const datas = sortedMilestones.map((milestone: Milestone) => {
+        let item = {
+          name: dateString(milestone.backlogMilestone.releaseDueDate),
+        };
+        const current = milestone.totalPoint;
+        if (current > 0) {
+          latest = current;
+          sum = sum + current;
+        } else {
+          sum = sum + latest;
+        }
+        releaseItems.map((release: Milestone) => {
+          item[release.backlogMilestone.name] = release.totalPoint;
+          item['forecast'] = sum;
+        });
+
+        return item;
+      });
+
+      setData(array.concat(datas));
     }
   };
 
@@ -146,29 +157,38 @@ const Test = (): JSX.Element => {
       />
       <MilestonesComponent milestones={milestones} />
       <section>
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
-          {(() => {
-            return releases.map((release: Milestone) => (
-              <Line type="monotone" dataKey={release.backlogMilestone.name} />
-            ));
-          })()}
-        </LineChart>
+        {(() => {
+          if (data) {
+            return (
+              <LineChart
+                width={600}
+                height={300}
+                data={data}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
+                {(() => {
+                  return releases.map((release: Milestone) => (
+                    <Line
+                      type="monotone"
+                      dataKey={release.backlogMilestone.name}
+                    />
+                  ));
+                })()}
+              </LineChart>
+            );
+          }
+        })()}
       </section>
       <IssuesComponent issues={issues} />
     </div>
