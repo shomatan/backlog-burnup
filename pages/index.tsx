@@ -1,6 +1,7 @@
 import React from 'react';
-// import Head from 'next/head';
+import styled from '@emotion/styled';
 import Header from '../src/components/organisms/header';
+import Nav from '../src/components/organisms/nav';
 import {
   Box,
   Button,
@@ -20,6 +21,13 @@ import { Title } from '@material-ui/icons';
 import { Global, css } from '@emotion/react';
 
 export const GlobalStyle = css`
+  html,
+  body,
+  body > div:first-child,
+  div#__next,
+  div#__next > div {
+    height: 100%;
+  }
   html {
     font-size: 62.5%;
     font-family: '游ゴシック Medium', YuGothic, YuGothicM,
@@ -27,10 +35,24 @@ export const GlobalStyle = css`
       sans-serif;
   }
   body {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     color: #444;
   }
 `;
+
+const App = styled.div({
+  display: 'grid',
+  // height: "100%",
+  gridTemplateColumns: '200px 1fr',
+  gridTemplateAreas: `
+    "Nav Main"
+    "Nav Main";
+  `,
+});
+
+const Main = styled.div({
+  gridArea: 'Main',
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,8 +107,9 @@ export const Home = (): JSX.Element => {
     <>
       <Global styles={GlobalStyle} />
       <Header />
-      <div className="container">
-        <body>
+      <App>
+        <Nav />
+        <Main>
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
@@ -164,8 +187,8 @@ export const Home = (): JSX.Element => {
             </Grid>
           </Container>
           <div className={classes.paper}></div>
-        </body>
-      </div>
+        </Main>
+      </App>
     </>
   );
 };
