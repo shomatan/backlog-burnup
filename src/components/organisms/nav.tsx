@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import styled from '@emotion/styled';
 import Logo from '../atom/logo';
 import * as Icon from '../atom/icon';
@@ -24,17 +25,26 @@ const NavStyled = styled.div({
 });
 
 const NavList = styled.div({
-  display: 'flex',
+  // display: 'flex',
 });
 
 const Ul = styled.ul({
   padding: 0,
   color: '#59B6A7',
   fontWeight: 700,
+  margin: 0,
+  listStyle: 'none',
 });
 
-const Li = styled.ul({
+const Li = styled.li({
   padding: 0,
+});
+
+const LinkText = styled.a({
+  display: 'block',
+  color: '#59B6A7',
+  padding: '10px 10px',
+  textDecoration: 'none',
 });
 
 const BottomLink = styled.div({
@@ -51,13 +61,26 @@ export const Nav = (): JSX.Element => {
       </Title>
       <NavList>
         <Ul>
-          <Li>HOME</Li>
+          <Li>
+            <Link href="/" passHref>
+              <LinkText>HOME</LinkText>
+            </Link>
+          </Li>
         </Ul>
       </NavList>
       <BottomLink>
         <NavList>
           <Ul>
-            <Li>ABOUT</Li>
+            <Li>
+              <Link href="/about" passHref>
+                <LinkText>ABOUT</LinkText>
+              </Link>
+            </Li>
+            <Li>
+              <Link href="/test" passHref>
+                <LinkText>TEST</LinkText>
+              </Link>
+            </Li>
           </Ul>
         </NavList>
         <Github>
