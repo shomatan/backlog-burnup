@@ -14,6 +14,7 @@ import { MilestonesComponent } from '../src/components/MilestonesComponent';
 import { ProjectComponent } from '../src/components/ProjectComponent';
 import {
   BacklogMilestone,
+  dateString,
   Issue,
   List,
   Milestone,
@@ -24,8 +25,24 @@ import {
   fetchMilestones,
 } from '../src/network/BacklogAPI';
 
+const sortMilestones = (milestones: List<Milestone>): List<Milestone> =>
+  milestones
+    .filter(
+      (milestone: Milestone) =>
+        milestone.backlogMilestone.name.includes('Sprint') &&
+        milestone.backlogMilestone.startDate &&
+        milestone.backlogMilestone.releaseDueDate
+    )
+    .sort((n1, n2) => {
+      return (
+        n1.backlogMilestone.startDate.getTime() -
+        n2.backlogMilestone.startDate.getTime()
+      );
+    });
+
 const Test = (): JSX.Element => {
   const [projectId, setProjectId] = useState(null);
+  const [projectStartDate, setProjectStartDate] = useState<Date>(null);
   const [issueTypeId, setIssueTypeId] = useState(null);
   const [issues, setIssues] = useState(null);
   const [milestones, setMilestones] = useState(null);
@@ -36,7 +53,6 @@ const Test = (): JSX.Element => {
   const [data, setData] = useState([]);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
-  const projectBegin = new Date(2021, 1, 5);
   const sprintDays = 7;
 
   const onIssueTypeChange = async (
@@ -70,45 +86,43 @@ const Test = (): JSX.Element => {
       );
       setReleases(releaseItems);
 
-      console.log('computed: %o', computed);
       // set graph
       let latest = 0;
       let sum = 0;
-      const datas = computed
-        .filter(
-          (milestone: Milestone) =>
-            milestone.backlogMilestone.name.includes('Sprint') &&
-            milestone.backlogMilestone.startDate
-        )
-        .sort((n1, n2) => {
-          return (
-            n1.backlogMilestone.startDate.getTime() -
-            n2.backlogMilestone.startDate.getTime()
-          );
-        })
-        .map((milestone: Milestone) => {
-          let item = {
-            name: milestone.backlogMilestone.releaseDueDate.toLocaleDateString(
-              'ja'
-            ),
-          };
-          const current = milestone.totalPoint;
-          if (current > 0) {
-            latest = current;
-            sum = sum + current;
-          } else {
-            sum = sum + latest;
-          }
-          releaseItems.map((release: Milestone) => {
-            item[release.backlogMilestone.name] = release.totalPoint;
-            item['forecast'] = sum;
-          });
+      const sortedMilestones = sortMilestones(computed);
 
-          return item;
+      let array = [];
+      if (projectStartDate) {
+        let item = {
+          name: dateString(projectStartDate),
+        };
+        releaseItems.map((release: Milestone) => {
+          item[release.backlogMilestone.name] = release.totalPoint;
+          item['forecast'] = 0;
+        });
+        array.push(item);
+      }
+
+      const datas = sortedMilestones.map((milestone: Milestone) => {
+        let item = {
+          name: dateString(milestone.backlogMilestone.releaseDueDate),
+        };
+        const current = milestone.totalPoint;
+        if (current > 0) {
+          latest = current;
+          sum = sum + current;
+        } else {
+          sum = sum + latest;
+        }
+        releaseItems.map((release: Milestone) => {
+          item[release.backlogMilestone.name] = release.totalPoint;
+          item['forecast'] = sum;
         });
 
-      console.dir(datas);
-      setData(datas);
+        return item;
+      });
+
+      setData(array.concat(datas));
     }
   };
 
@@ -124,7 +138,11 @@ const Test = (): JSX.Element => {
     (async () => {
       const items = await fetchMilestones(projectKey);
       const computed = items.map((item) => Milestone(item, 0));
+      const sorted = sortMilestones(computed);
 
+      if (sorted.length > 0) {
+        setProjectStartDate(sorted[0].backlogMilestone.startDate);
+      }
       setBacklogMilestones(items);
       setMilestones(computed);
     })();
@@ -137,7 +155,14 @@ const Test = (): JSX.Element => {
       </section>
       <section>
         <ProjectComponent projectKey={projectKey} setProjectId={setProjectId} />
-        <p>Project begin: {projectBegin.toLocaleDateString('ja')}</p>
+        <p>
+          Project begin:
+          {(() => {
+            if (projectStartDate) {
+              return dateString(projectStartDate);
+            }
+          })()}
+        </p>
         <p>Days per Sprint: {sprintDays} days / sprint</p>
       </section>
       <IssueTypesComponent
@@ -146,29 +171,38 @@ const Test = (): JSX.Element => {
       />
       <MilestonesComponent milestones={milestones} />
       <section>
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
-          {(() => {
-            return releases.map((release: Milestone) => (
-              <Line type="monotone" dataKey={release.backlogMilestone.name} />
-            ));
-          })()}
-        </LineChart>
+        {(() => {
+          if (data) {
+            return (
+              <LineChart
+                width={600}
+                height={300}
+                data={data}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
+                {(() => {
+                  return releases.map((release: Milestone) => (
+                    <Line
+                      type="monotone"
+                      dataKey={release.backlogMilestone.name}
+                    />
+                  ));
+                })()}
+              </LineChart>
+            );
+          }
+        })()}
       </section>
       <IssuesComponent issues={issues} />
     </div>

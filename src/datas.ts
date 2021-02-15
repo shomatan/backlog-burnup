@@ -62,6 +62,8 @@ export const BacklogMilestone = (
   archived,
 });
 
+export const dateString = (d: Date): string => d.toLocaleDateString('ja');
+
 export interface Milestone {
   readonly backlogMilestone: BacklogMilestone;
   readonly totalPoint: number;
