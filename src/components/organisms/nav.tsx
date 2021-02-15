@@ -43,7 +43,7 @@ const Li = styled.li({
 const LinkText = styled.a({
   display: 'block',
   color: '#59B6A7',
-  padding: '10px 10px',
+  padding: '10px 0',
   textDecoration: 'none',
 });
 
@@ -51,6 +51,10 @@ const BottomLink = styled.div({
   marginTop: 'auto',
   color: '#59B6A7',
 });
+
+const LinkIcon = styled.a({
+  color: '#59B6A7',
+})
 
 export const Nav = (): JSX.Element => {
   return (
@@ -84,7 +88,11 @@ export const Nav = (): JSX.Element => {
           </Ul>
         </NavList>
         <Github>
-          <Icon.Github />
+          <Link href="https://github.com/shomatan/backlog-burnup" passHref>
+            <LinkIcon>
+              <Icon.Github />
+            </LinkIcon>
+          </Link>
         </Github>
       </BottomLink>
     </NavStyled>

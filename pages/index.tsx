@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Header from '../src/components/organisms/header';
 import Nav from '../src/components/organisms/nav';
+import MainGrid from '../src/components/organisms/mainGrid';
 import {
   Box,
   Button,
@@ -23,7 +24,7 @@ import { Global, css } from '@emotion/react';
 export const GlobalStyle = css`
   html,
   body,
-  body > div:first-child,
+  body > div:first-of-type,
   div#__next,
   div#__next > div {
     height: 100%;
@@ -111,6 +112,7 @@ export const Home = (): JSX.Element => {
       <App>
         <Nav />
         <Main>
+          <MainGrid />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
