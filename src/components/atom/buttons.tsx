@@ -24,6 +24,7 @@ export enum Variant {
 const Core = styled.button({
   outline: 'none',
   border: '0 none',
+  padding: 8,
   borderRadius: 3,
 });
 
@@ -32,30 +33,50 @@ const Contained = css({
 });
 
 const Outlined = css({
-
+  border: "1px solid #cfcfcf"
 })
-
 
 const Text = css({
-  
+  background: '#cfcfcf'
 })
 
-const Styles = {
+const VariantStyles = {
   contained: Contained,
   outlined: Outlined,
-  text: Text,
+  text: Text
 }
 
-const PrimaryStyled = styled(Core)(
+const PrimaryColor = css({
+  color: "#fff"
+})
+
+const SecondaryColor = css({
+  color: "#fff"
+})
+
+const DefaultColor = css({
+  color: "#fff"
+})
+
+const ColorStyles = {
+  primary: PrimaryColor,
+  secondary: SecondaryColor,
+  default: DefaultColor
+}
+
+const ButtonStyled = styled(Core)(
   (props: Props) => (
-    Styles[props.variant]
+    VariantStyles[props.variant]
+  ),
+  (props: Props) => (
+    ColorStyles[props.color]
   )
 );
 
 export const Button = ({ children, color, variant }: Props): JSX.Element => {
   return (
-    <PrimaryStyled color={color} variant={variant}>
+    <ButtonStyled color={color} variant={variant}>
       {children}
-    </PrimaryStyled>
+    </ButtonStyled>
   );
 };
