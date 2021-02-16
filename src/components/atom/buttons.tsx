@@ -4,13 +4,20 @@ import styled from '@emotion/styled';
 
 interface Props {
   children: React.ReactNode;
-  color?: ColorTypes;
+  color?: Color;
+  variant?: Variant;
 }
 
-export enum ColorTypes {
+export enum Color {
   primary = 'primary',
   secondary = 'secondary',
   default = 'default',
+}
+
+export enum Variant {
+  text = 'text',
+  outlined = 'outlined',
+  contained = 'contained',
 }
 
 const Core = styled.button({
@@ -19,10 +26,23 @@ const Core = styled.button({
   borderRadius: 3,
 });
 
-const PrimaryStyled = styled(Core)({
+const Contained = {
   background: '#59B6A7',
-});
+};
 
-export const Button = ({ children }: Props): JSX.Element => {
-  return <PrimaryStyled>{children}</PrimaryStyled>;
+const PrimaryStyled = styled(Core)(
+  {
+    background: '#59B6A7',
+  },
+  (props: Props) => ({
+    color: props.variant === Variant.contained ? '#fff' : '#444',
+  })
+);
+
+export const Button = ({ children, color, variant }: Props): JSX.Element => {
+  return (
+    <PrimaryStyled color={color} variant={variant}>
+      {children}
+    </PrimaryStyled>
+  );
 };
