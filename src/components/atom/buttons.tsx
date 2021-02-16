@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { jsx, css } from '@emotion/react'
 // import { JSXChildren } from "../../../core/type";
 
 interface Props {
@@ -26,17 +27,29 @@ const Core = styled.button({
   borderRadius: 3,
 });
 
-const Contained = {
+const Contained = css({
   background: '#59B6A7',
-};
+});
+
+const Outlined = css({
+
+})
+
+
+const Text = css({
+  
+})
+
+const Styles = {
+  contained: Contained,
+  outlined: Outlined,
+  text: Text,
+}
 
 const PrimaryStyled = styled(Core)(
-  {
-    background: '#59B6A7',
-  },
-  (props: Props) => ({
-    color: props.variant === Variant.contained ? '#fff' : '#444',
-  })
+  (props: Props) => (
+    Styles[props.variant]
+  )
 );
 
 export const Button = ({ children, color, variant }: Props): JSX.Element => {
