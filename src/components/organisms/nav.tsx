@@ -54,7 +54,7 @@ const BottomLink = styled.div({
 
 const LinkIcon = styled.a({
   color: '#59B6A7',
-})
+});
 
 export const Nav = (): JSX.Element => {
   return (

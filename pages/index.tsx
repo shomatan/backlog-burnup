@@ -20,6 +20,7 @@ import {
 import clsx from 'clsx';
 import { Title } from '@material-ui/icons';
 import { Global, css } from '@emotion/react';
+import * as Buttons from '../src/components/atom/buttons';
 
 export const GlobalStyle = css`
   html,
@@ -112,7 +113,7 @@ export const Home = (): JSX.Element => {
       <App>
         <Nav />
         <Main>
-          <MainGrid />
+          {/* <MainGrid /> */}
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
@@ -172,6 +173,9 @@ export const Home = (): JSX.Element => {
                     >
                       Get Backlog data
                     </Button>
+                    <Buttons.Button color={Buttons.ColorTypes.primary}>
+                      aaa
+                    </Buttons.Button>
                   </form>
                 </Paper>
               </Grid>

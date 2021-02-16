@@ -21,9 +21,24 @@ export const Github = (): JSX.Element => {
 
 export const Add = (): JSX.Element => {
   return (
-    <svg width="61" height="61" viewBox="0 0 61 61" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M30.5 30.5H19.1M30.5 19.1V30.5V19.1ZM30.5 30.5V41.9V30.5ZM30.5 30.5H41.9H30.5Z" stroke="#59B6A7" stroke-width="4" stroke-linecap="round"/>
-      <path d="M30.5 59C46.2401 59 59 46.2401 59 30.5C59 14.7599 46.2401 2 30.5 2C14.7599 2 2 14.7599 2 30.5C2 46.2401 14.7599 59 30.5 59Z" stroke="#59B6A7" stroke-width="4"/>
+    <svg
+      width="61"
+      height="61"
+      viewBox="0 0 61 61"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M30.5 30.5H19.1M30.5 19.1V30.5V19.1ZM30.5 30.5V41.9V30.5ZM30.5 30.5H41.9H30.5Z"
+        stroke="#59B6A7"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <path
+        d="M30.5 59C46.2401 59 59 46.2401 59 30.5C59 14.7599 46.2401 2 30.5 2C14.7599 2 2 14.7599 2 30.5C2 46.2401 14.7599 59 30.5 59Z"
+        stroke="#59B6A7"
+        stroke-width="4"
+      />
     </svg>
-  )
-}
+  );
+};
