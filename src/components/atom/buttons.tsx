@@ -1,82 +1,113 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { jsx, css } from '@emotion/react'
+import { jsx, css } from '@emotion/react';
 // import { JSXChildren } from "../../../core/type";
 
 interface Props {
   children: React.ReactNode;
   color?: Color;
-  variant?: Variant;
+  variant: Variant;
 }
 
-export enum Color {
-  primary = 'primary',
-  secondary = 'secondary',
-  default = 'default',
-}
+export const Color = {
+  primary: 'primary',
+  secondary: 'secondary',
+  default: 'default',
+} as const;
+type Color = typeof Color[keyof typeof Color];
 
-export enum Variant {
-  text = 'text',
-  outlined = 'outlined',
-  contained = 'contained',
-}
+export const Variant = {
+  text: 'text',
+  outlined: 'outlined',
+  contained: 'contained',
+};
+type Variant = typeof Variant[keyof typeof Variant];
 
 const Core = styled.button({
   outline: 'none',
   border: '0 none',
-  padding: 8,
   borderRadius: 3,
+  padding: '8px 16px',
+  lineHeight: 1,
+  cursor: 'pointer',
 });
 
-const Contained = css({
+const ContainedpPrimary = css({
   background: '#59B6A7',
+  color: '#fff',
 });
 
-const Outlined = css({
-  border: "1px solid #cfcfcf"
-})
+const ContainedpSecondary = css({
+  background: '#4a79bf',
+  color: '#fff',
+});
 
-const Text = css({
-  background: '#cfcfcf'
-})
+const ContainedpDefault = css({
+  background: '#838484',
+  color: '#fff',
+});
+
+const OutlinedPrimary = css({
+  border: '2px solid #59B6A7',
+  color: '#59B6A7',
+  background: 'none',
+});
+
+const OutlinedSecondary = css({
+  border: '2px solid #4a79bf',
+  color: '#4a79bf',
+  background: 'none',
+});
+
+const OutlinedDefault = css({
+  border: '2px solid #838484',
+  color: '#838484',
+  background: 'none',
+});
+
+const TextPrimary = css({
+  background: 'none',
+  color: '#59B6A7',
+});
+
+const TextSecondary = css({
+  background: 'none',
+  color: '#4a79bf',
+});
+
+const TextDefault = css({
+  background: 'none',
+  color: '#838484',
+});
 
 const VariantStyles = {
-  contained: Contained,
-  outlined: Outlined,
-  text: Text
-}
-
-const PrimaryColor = css({
-  color: "#fff"
-})
-
-const SecondaryColor = css({
-  color: "#fff"
-})
-
-const DefaultColor = css({
-  color: "#fff"
-})
-
-const ColorStyles = {
-  primary: PrimaryColor,
-  secondary: SecondaryColor,
-  default: DefaultColor
-}
+  contained: {
+    primary: ContainedpPrimary,
+    secondary: ContainedpSecondary,
+    default: ContainedpDefault,
+  },
+  outlined: {
+    primary: OutlinedPrimary,
+    secondary: OutlinedSecondary,
+    default: OutlinedDefault,
+  },
+  text: {
+    primary: TextPrimary,
+    secondary: TextSecondary,
+    default: TextDefault,
+  },
+};
 
 const ButtonStyled = styled(Core)(
-  (props: Props) => (
-    VariantStyles[props.variant]
-  ),
-  (props: Props) => (
-    ColorStyles[props.color]
-  )
+  (props: Props) => VariantStyles[props.variant][props.color]
 );
 
-export const Button = ({ children, color, variant }: Props): JSX.Element => {
+const Label = styled.span({});
+
+export const Button = ({ children, ...props }: Props): JSX.Element => {
   return (
-    <ButtonStyled color={color} variant={variant}>
-      {children}
+    <ButtonStyled {...props}>
+      <Label>{children}</Label>
     </ButtonStyled>
   );
 };

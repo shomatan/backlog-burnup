@@ -175,7 +175,7 @@ export const Home = (): JSX.Element => {
                     </Button>
                     <Buttons.Button
                       color={Buttons.Color.primary}
-                      variant={Buttons.Variant.contained}
+                      variant={Buttons.Variant.outlined}
                     >
                       aaa
                     </Buttons.Button>
