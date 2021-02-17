@@ -2,11 +2,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { jsx, css } from '@emotion/react';
 // import { JSXChildren } from "../../../core/type";
+import * as Config from '../_config/color';
 
 interface Props {
   children: React.ReactNode;
   color?: Color;
   variant: Variant;
+  fullWidth?: boolean;
 }
 
 export const Color = {
@@ -28,56 +30,69 @@ const Core = styled.button({
   border: '0 none',
   borderRadius: 3,
   padding: '8px 16px',
-  lineHeight: 1,
   cursor: 'pointer',
 });
 
+const Label = styled.span({
+  display: 'flex',
+  lineHeight: 1,
+});
+
 const ContainedpPrimary = css({
-  background: '#59B6A7',
+  background: Config.Color.primary,
   color: '#fff',
+  '&:hover': {
+    background: Config.Color.button.hover.primary,
+  },
 });
 
 const ContainedpSecondary = css({
-  background: '#4a79bf',
+  background: Config.Color.secondary,
   color: '#fff',
+  '&:hover': {
+    background: Config.Color.button.hover.secondary,
+  },
 });
 
 const ContainedpDefault = css({
-  background: '#838484',
+  background: Config.Color.default,
   color: '#fff',
+  '&:hover': {
+    background: Config.Color.button.hover.default,
+  },
 });
 
 const OutlinedPrimary = css({
-  border: '2px solid #59B6A7',
-  color: '#59B6A7',
+  border: `2px solid ${Config.Color.primary}`,
   background: 'none',
+  color: `${Config.Color.primary}`,
 });
 
 const OutlinedSecondary = css({
-  border: '2px solid #4a79bf',
-  color: '#4a79bf',
+  border: `2px solid ${Config.Color.secondary}`,
   background: 'none',
+  color: `${Config.Color.secondary}`,
 });
 
 const OutlinedDefault = css({
-  border: '2px solid #838484',
-  color: '#838484',
+  border: `2px solid ${Config.Color.default}`,
   background: 'none',
+  color: `${Config.Color.default}`,
 });
 
 const TextPrimary = css({
   background: 'none',
-  color: '#59B6A7',
+  color: `${Config.Color.primary}`,
 });
 
 const TextSecondary = css({
   background: 'none',
-  color: '#4a79bf',
+  color: `${Config.Color.secondary}`,
 });
 
 const TextDefault = css({
   background: 'none',
-  color: '#838484',
+  color: `${Config.Color.default}`,
 });
 
 const VariantStyles = {
@@ -99,10 +114,11 @@ const VariantStyles = {
 };
 
 const ButtonStyled = styled(Core)(
-  (props: Props) => VariantStyles[props.variant][props.color]
+  (props: Props) => VariantStyles[props.variant][props.color],
+  (props: Props) => ({
+    width: props.fullWidth ? '100%' : 'auto',
+  })
 );
-
-const Label = styled.span({});
 
 export const Button = ({ children, ...props }: Props): JSX.Element => {
   return (
