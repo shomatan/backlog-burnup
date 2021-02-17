@@ -4,8 +4,8 @@ export const Color = {
   default: '#838484',
   button: {
     hover: {
-      primary: '#4dbba9',
-      secondary: '#2e5ca2',
+      primary: '#40a796',
+      secondary: '#3561a5',
       default: '#757575',
     },
   },

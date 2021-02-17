@@ -174,7 +174,7 @@ export const Home = (): JSX.Element => {
                       Get Backlog data
                     </Button>
                     <Buttons.Button
-                      color={Buttons.Color.default}
+                      color={Buttons.Color.primary}
                       variant={Buttons.Variant.contained}
                     >
                       aaa
