@@ -46,13 +46,7 @@ export const Add = (): JSX.Element => {
   );
 };
 
-// const CloseIcon = css({
-//     position: 'absolute',
-//     right: 0
-// })
-
 export const Close = (props): JSX.Element => {
-  console.log(props);
   return (
     <svg
       {...props}
