@@ -21,7 +21,7 @@ const NavStyled = styled.div({
   borderRight: '1px solid #EEEEEE',
   padding: '40px 26px 30px',
   display: 'grid',
-  gridTemplateRows: '100px 1fr 100px',
+  gridTemplateRows: '70px 1fr 100px',
 });
 
 const NavList = styled.div({
