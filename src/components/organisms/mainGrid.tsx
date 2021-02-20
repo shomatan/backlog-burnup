@@ -4,12 +4,7 @@ import React, { useState } from 'react';
 import { jsx, css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as Icon from '../atom/icon';
-import {
-  Box,
-  TextField,
-  Select,
-  MenuItem
-} from '@material-ui/core';
+import { Box, TextField, Select, MenuItem } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
 import * as Buttons from '../atom/buttons';
 
@@ -54,34 +49,33 @@ const Config = styled.div({
 });
 
 const ConfigForm = styled.div({
-  // display: 'flex',
-  // flexDirection: 'column',
   width: '100%',
-  // height: '100%'
 });
 
 const CloseIcon = css({
   position: 'absolute',
-  top: 8,
-  right: 8,
+  top: 16,
+  right: 16,
   cursor: 'pointer',
 });
 
 const Space = styled.div({
   display: 'grid',
   gridTemplateColumns: '90px 1fr 100px',
-  alignItems: 'center'
-})
+  alignItems: 'center',
+});
 
 const ConfigFormItem = styled.div({
   display: 'grid',
   gridTemplateColumns: '90px 1fr',
   alignItems: 'center',
-  marginTop: 10
-})
+  marginTop: 10,
+});
 
 export const MainGrid = (): JSX.Element => {
-  const [state, setState] = useState(null);
+  const [toggleState, setToggle] = useState(null);
+  const [spaceUrl, setSpaceUrl] = React.useState('');
+  const [ApiKey, setApiKey] = React.useState('');
   const [projectId, setProjectId] = React.useState('');
   const [issueType, setIssueType] = React.useState('');
   const [milestoneItem, setMilestoneItem] = React.useState([]);
@@ -99,20 +93,27 @@ export const MainGrid = (): JSX.Element => {
   };
 
   const milestones = [
-    'Milestone_1',
-    'Milestone_2',
-    'Milestone_3',
-    'Milestone_4',
-    'Milestone_5',
+    { id: 1, label: 'Milestone_1' },
+    { id: 2, label: 'Milestone_2' },
+    { id: 3, label: 'Milestone_3' },
+    { id: 4, label: 'Milestone_4' },
+    { id: 5, label: 'Milestone_5' },
   ];
+
+  const ClickApply = (formData) => {
+    console.log(formData);
+  };
 
   return (
     <Grid>
       <Panel></Panel>
       <AddPanel>
-        {state ? (
+        {toggleState ? (
           <Config>
-            <Icon.Close css={CloseIcon} onClick={() => setState(!state)} />
+            <Icon.Close
+              css={CloseIcon}
+              onClick={() => setToggle(!toggleState)}
+            />
             <ConfigForm>
               <Space>
                 <Box>https://</Box>
@@ -125,6 +126,8 @@ export const MainGrid = (): JSX.Element => {
                   name="url"
                   autoComplete="url"
                   autoFocus
+                  value={spaceUrl}
+                  onChange={(e) => setSpaceUrl(e.target.value)}
                 />
                 <Box>.backlog.com</Box>
               </Space>
@@ -134,10 +137,14 @@ export const MainGrid = (): JSX.Element => {
                   variant="standard"
                   margin="none"
                   required
-                  id="url"
+                  id="apiKey"
                   label="API Key"
-                  name="url"
-                  autoComplete="url"
+                  name="apiKey"
+                  autoComplete="apiKey"
+                  value={ApiKey}
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                  }}
                 />
               </ConfigFormItem>
               <ConfigFormItem>
@@ -178,16 +185,32 @@ export const MainGrid = (): JSX.Element => {
                   onChange={changeMilestone}
                   input={<Input />}
                 >
-                  {milestones.map((name) => (
-                    <MenuItem key={name} value={name}>{name}</MenuItem>
+                  {milestones.map((data) => (
+                    <MenuItem key={data.id} value={data.id}>
+                      {data.label}
+                    </MenuItem>
                   ))}
                 </Select>
               </ConfigFormItem>
-              <Buttons.Button color={Buttons.Color.primary} variant={Buttons.Variant.contained}>Apply</Buttons.Button>
+              <Buttons.Button
+                color={Buttons.Color.primary}
+                variant={Buttons.Variant.contained}
+                onClick={() =>
+                  ClickApply({
+                    spaceUrl: spaceUrl,
+                    ApiKey: ApiKey,
+                    projectId: projectId,
+                    issueType: issueType,
+                    milestoneItem: milestoneItem,
+                  })
+                }
+              >
+                Apply
+              </Buttons.Button>
             </ConfigForm>
           </Config>
         ) : (
-          <AddPanelInner onClick={() => setState(!state)}>
+          <AddPanelInner onClick={() => setToggle(!toggleState)}>
             <Icon.Add />
           </AddPanelInner>
         )}

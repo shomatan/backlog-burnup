@@ -6,6 +6,7 @@ import * as Config from '../_config/color';
 
 interface Props {
   children: React.ReactNode;
+  onClick?: (e) => void;
   color?: Color;
   variant: Variant;
   fullWidth?: boolean;
