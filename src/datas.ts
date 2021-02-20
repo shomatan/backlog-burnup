@@ -1,5 +1,35 @@
 export type List<A> = ReadonlyArray<A>;
 
+export interface ProjectList {
+  readonly id: number;
+  readonly projectKey: string;
+  readonly name: string;
+  readonly chartEnabled: boolean;
+  readonly subtaskingEnabled: boolean;
+  readonly projectLeaderCanEditProjectLeader: boolean;
+  readonly textFormattingRule: string;
+  readonly archived: boolean;
+}
+export const ProjectList = (
+  id: number,
+  projectKey: string,
+  name: string,
+  chartEnabled: boolean,
+  subtaskingEnabled: boolean,
+  projectLeaderCanEditProjectLeader: boolean,
+  textFormattingRule: string,
+  archived: boolean
+): ProjectList => ({
+  id,
+  projectKey,
+  name,
+  chartEnabled,
+  subtaskingEnabled,
+  projectLeaderCanEditProjectLeader,
+  textFormattingRule,
+  archived,
+});
+
 export interface Project {
   readonly id: number;
   readonly name: string;

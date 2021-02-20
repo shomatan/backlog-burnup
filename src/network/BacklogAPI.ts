@@ -1,4 +1,19 @@
-import { Issue, IssueType, BacklogMilestone, Project } from '../datas';
+import {
+  Issue,
+  IssueType,
+  BacklogMilestone,
+  Project,
+  ProjectList,
+} from '../datas';
+
+export const fetchProjectsList = async (
+  backlog_url: string,
+  api_key: string
+): Promise<ReadonlyArray<ProjectList>> => {
+  const res = await fetchBacklog('/api/v2/projects', [], backlog_url, api_key);
+  const json = await res.json();
+  return json;
+};
 
 export const fetchProjectInfo = async (
   projectKey: string
@@ -78,9 +93,14 @@ export const fetchIssuesOfIssueType = async (
 
 const fetchBacklog = (
   endpoint: string,
-  params: Array<string> = []
+  params: Array<string> = [],
+  backlog_url?: string,
+  api_key?: string
 ): Promise<Response> => {
   let url = `${process.env.BACKLOG_URL}${endpoint}?apiKey=${process.env.BACKLOG_API_KEY}`;
+  if (backlog_url && api_key) {
+    url = `${backlog_url}${endpoint}?apiKey=${api_key}`;
+  }
   if (params.length > 0) {
     url = url + '&' + params.join('&');
   }

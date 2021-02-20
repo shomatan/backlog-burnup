@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx, css, Global } from '@emotion/react';
@@ -7,6 +7,12 @@ import * as Icon from '../atom/icon';
 import { Box, TextField, Select, MenuItem } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
 import * as Buttons from '../atom/buttons';
+import {
+  fetchProjectsList,
+  fetchProjectInfo,
+  fetchIssueType,
+} from '../../network/BacklogAPI';
+import { Project, IssueType } from '../../datas';
 
 const Grid = styled.div({
   display: 'grid',
@@ -74,11 +80,25 @@ const ConfigFormItem = styled.div({
 
 export const MainGrid = (): JSX.Element => {
   const [toggleState, setToggle] = useState(null);
+  // const [project, setProject] = useState(Project(0, ''));
+  const [applyState, setApplyState] = useState(null);
   const [spaceUrl, setSpaceUrl] = React.useState('');
   const [ApiKey, setApiKey] = React.useState('');
   const [projectId, setProjectId] = React.useState('');
   const [issueType, setIssueType] = React.useState('');
   const [milestoneItem, setMilestoneItem] = React.useState([]);
+
+  // const projectKey = process.env.BACKLOG_PROJECT_KEY;
+  useEffect(() => {
+    if (!spaceUrl || !ApiKey) return;
+    // if (project.id > 0) return;
+    (async () => {
+      const p = await fetchProjectsList(spaceUrl, ApiKey);
+      console.log('p:', p);
+      // setProject(p);
+      // props.setProjectId(p.id);
+    })();
+  }, [spaceUrl, ApiKey]);
 
   const changeProject = (event) => {
     setProjectId(event.target.value);
@@ -101,7 +121,8 @@ export const MainGrid = (): JSX.Element => {
   ];
 
   const ClickApply = (formData) => {
-    console.log(formData);
+    console.log('formData:', formData);
+    setApplyState(formData);
   };
 
   return (
