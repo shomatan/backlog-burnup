@@ -11,8 +11,9 @@ import {
   fetchProjectsList,
   fetchProjectInfo,
   fetchIssueType,
+  fetchMilestones,
 } from '../../network/BacklogAPI';
-import { Project, IssueType } from '../../datas';
+import { Project, IssueType, BacklogMilestone } from '../../datas';
 
 const Grid = styled.div({
   display: 'grid',
@@ -84,21 +85,51 @@ export const MainGrid = (): JSX.Element => {
   const [applyState, setApplyState] = useState(null);
   const [spaceUrl, setSpaceUrl] = React.useState('');
   const [ApiKey, setApiKey] = React.useState('');
-  const [projectId, setProjectId] = React.useState('');
-  const [issueType, setIssueType] = React.useState('');
-  const [milestoneItem, setMilestoneItem] = React.useState([]);
+  const [projecsList, setProjecsList] = React.useState([]);
+  const [projectId, setProjectId] = React.useState(0);
+  const [issueTypeList, setIssueTypeList] = React.useState<
+    ReadonlyArray<IssueType>
+  >(null);
+  const [issueType, setIssueType] = React.useState(0);
+  const [milestoneList, setMilestoneList] = React.useState<
+    ReadonlyArray<BacklogMilestone>
+  >(null);
+  const [milestoneItem, setMilestoneItem] = React.useState(0);
 
-  // const projectKey = process.env.BACKLOG_PROJECT_KEY;
   useEffect(() => {
+    // for dev
+    if (process.env.BACKLOG_URL) setSpaceUrl(process.env.BACKLOG_URL);
+    if (process.env.BACKLOG_API_KEY) setApiKey(process.env.BACKLOG_API_KEY);
+
     if (!spaceUrl || !ApiKey) return;
-    // if (project.id > 0) return;
     (async () => {
       const p = await fetchProjectsList(spaceUrl, ApiKey);
-      console.log('p:', p);
-      // setProject(p);
-      // props.setProjectId(p.id);
+
+      setProjecsList(p.filter((v) => v.archived === false));
     })();
-  }, [spaceUrl, ApiKey]);
+  }, [spaceUrl, ApiKey, projectId]);
+
+  useEffect(() => {
+    if (projectId) {
+      (async () => {
+        const i = await fetchIssueType(
+          projecsList.find((p) => p.id === projectId).projectKey
+        );
+        setIssueTypeList(i);
+      })();
+    }
+  }, [projectId, issueType]);
+
+  useEffect(() => {
+    if (projectId) {
+      (async () => {
+        const i = await fetchMilestones(
+          projecsList.find((p) => p.id === projectId).projectKey
+        );
+        setMilestoneList(i);
+      })();
+    }
+  }, [projectId, milestoneItem]);
 
   const changeProject = (event) => {
     setProjectId(event.target.value);
@@ -122,7 +153,6 @@ export const MainGrid = (): JSX.Element => {
 
   const ClickApply = (formData) => {
     console.log('formData:', formData);
-    setApplyState(formData);
   };
 
   return (
@@ -168,66 +198,90 @@ export const MainGrid = (): JSX.Element => {
                   }}
                 />
               </ConfigFormItem>
-              <ConfigFormItem>
-                <Box>Project</Box>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={projectId}
-                  onChange={changeProject}
-                >
-                  <MenuItem value={10}>Project1</MenuItem>
-                  <MenuItem value={20}>Project2</MenuItem>
-                  <MenuItem value={30}>Project3</MenuItem>
-                </Select>
-              </ConfigFormItem>
+              {spaceUrl && ApiKey ? (
+                <ConfigFormItem>
+                  <Box>Project</Box>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={projectId}
+                    onChange={changeProject}
+                  >
+                    {projecsList
+                      ? projecsList.map((data) => {
+                          return (
+                            <MenuItem key={data.id} value={data.id}>
+                              {data.name}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </ConfigFormItem>
+              ) : null}
 
-              <ConfigFormItem>
-                <Box>Issue Type</Box>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={issueType}
-                  onChange={changeIssueType}
-                >
-                  <MenuItem value={10}>Issue Type1</MenuItem>
-                  <MenuItem value={20}>Issue Type2</MenuItem>
-                  <MenuItem value={30}>Issue Type3</MenuItem>
-                </Select>
-              </ConfigFormItem>
+              {spaceUrl && ApiKey && projectId ? (
+                <>
+                  <ConfigFormItem>
+                    <Box>Issue Type</Box>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={issueType}
+                      onChange={changeIssueType}
+                    >
+                      {issueTypeList
+                        ? issueTypeList.map((data) => {
+                            return (
+                              <MenuItem key={data.id} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </ConfigFormItem>
 
-              <ConfigFormItem>
-                <Box>Milestone</Box>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  multiple
-                  value={milestoneItem}
-                  onChange={changeMilestone}
-                  input={<Input />}
+                  <ConfigFormItem>
+                    <Box>Milestone</Box>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      // multiple
+                      value={milestoneItem}
+                      onChange={changeMilestone}
+                    >
+                      {milestoneList
+                        ? milestoneList.map((data) => {
+                            return (
+                              <MenuItem key={data.id} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </ConfigFormItem>
+                </>
+              ) : null}
+
+              {issueType & milestoneItem ? (
+                <Buttons.Button
+                  color={Buttons.Color.primary}
+                  variant={Buttons.Variant.contained}
+                  onClick={() =>
+                    ClickApply({
+                      spaceUrl: spaceUrl,
+                      ApiKey: ApiKey,
+                      projectId: projectId,
+                      issueType: issueType,
+                      milestoneItem: milestoneItem,
+                    })
+                  }
                 >
-                  {milestones.map((data) => (
-                    <MenuItem key={data.id} value={data.id}>
-                      {data.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </ConfigFormItem>
-              <Buttons.Button
-                color={Buttons.Color.primary}
-                variant={Buttons.Variant.contained}
-                onClick={() =>
-                  ClickApply({
-                    spaceUrl: spaceUrl,
-                    ApiKey: ApiKey,
-                    projectId: projectId,
-                    issueType: issueType,
-                    milestoneItem: milestoneItem,
-                  })
-                }
-              >
-                Apply
-              </Buttons.Button>
+                  Apply
+                </Buttons.Button>
+              ) : null}
             </ConfigForm>
           </Config>
         ) : (
