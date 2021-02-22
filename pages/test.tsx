@@ -51,6 +51,7 @@ const Test = (): JSX.Element => {
   >(null);
   const [releases, setReleases] = useState<List<Milestone>>([]);
   const [data, setData] = useState([]);
+  console.log('data:', data);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
   const sprintDays = 7;

@@ -9,11 +9,20 @@ import Input from '@material-ui/core/Input';
 import * as Buttons from '../atom/buttons';
 import {
   fetchProjectsList,
-  fetchProjectInfo,
   fetchIssueType,
   fetchMilestones,
 } from '../../network/BacklogAPI';
-import { Project, IssueType, BacklogMilestone } from '../../datas';
+import { IssueType, dateString, BacklogMilestone } from '../../datas';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+} from 'recharts';
 
 const Grid = styled.div({
   display: 'grid',
@@ -25,7 +34,7 @@ const Panel = styled.div({
   padding: 10,
   boxShadow: '0 0 30px rgba(0,0,0,0.15)',
   borderRadius: 8,
-  minHeight: 350,
+  height: 350,
 });
 
 const AddPanel = styled.div({
@@ -33,6 +42,7 @@ const AddPanel = styled.div({
   background: '#F3F3F3',
   borderRadius: 8,
   color: '#59B6A7',
+  height: 350,
 });
 
 const AddPanelInner = styled.div({
@@ -80,9 +90,9 @@ const ConfigFormItem = styled.div({
 });
 
 export const MainGrid = (): JSX.Element => {
-  const [toggleState, setToggle] = useState(null);
-  // const [project, setProject] = useState(Project(0, ''));
-  const [applyState, setApplyState] = useState(null);
+  const [toggleState, setToggle] = React.useState(null);
+  const [chartState, setChartState] = React.useState([]);
+  const [formData, setFormData] = React.useState(null);
   const [spaceUrl, setSpaceUrl] = React.useState('');
   const [ApiKey, setApiKey] = React.useState('');
   const [projecsList, setProjecsList] = React.useState([]);
@@ -94,7 +104,9 @@ export const MainGrid = (): JSX.Element => {
   const [milestoneList, setMilestoneList] = React.useState<
     ReadonlyArray<BacklogMilestone>
   >(null);
-  const [milestoneItem, setMilestoneItem] = React.useState(0);
+  // const [milestoneItem, setMilestoneItem] = React.useState(0);
+  // const [release, setRelease] = React.useState(null);
+  const [projectStartDate, setProjectStartDate] = useState<Date>(null);
 
   useEffect(() => {
     // for dev
@@ -116,20 +128,24 @@ export const MainGrid = (): JSX.Element => {
           projecsList.find((p) => p.id === projectId).projectKey
         );
         setIssueTypeList(i);
+        const m = await fetchMilestones(
+          projecsList.find((p) => p.id === projectId).projectKey
+        );
+        setMilestoneList(m);
       })();
     }
   }, [projectId, issueType]);
 
-  useEffect(() => {
-    if (projectId) {
-      (async () => {
-        const i = await fetchMilestones(
-          projecsList.find((p) => p.id === projectId).projectKey
-        );
-        setMilestoneList(i);
-      })();
-    }
-  }, [projectId, milestoneItem]);
+  // useEffect(() => {
+  //   if (projectId) {
+  //     (async () => {
+  //       const i = await fetchMilestones(
+  //         projecsList.find((p) => p.id === projectId).projectKey
+  //       );
+  //       setMilestoneList(i);
+  //     })();
+  //   }
+  // }, [projectId, milestoneItem]);
 
   const changeProject = (event) => {
     setProjectId(event.target.value);
@@ -139,25 +155,69 @@ export const MainGrid = (): JSX.Element => {
     setIssueType(event.target.value);
   };
 
-  const changeMilestone = (event) => {
-    setMilestoneItem(event.target.value);
-  };
-
-  const milestones = [
-    { id: 1, label: 'Milestone_1' },
-    { id: 2, label: 'Milestone_2' },
-    { id: 3, label: 'Milestone_3' },
-    { id: 4, label: 'Milestone_4' },
-    { id: 5, label: 'Milestone_5' },
-  ];
+  // const changeMilestone = (event) => {
+  //   setMilestoneItem(event.target.value);
+  // };
 
   const ClickApply = (formData) => {
+    // let array = [];
+    // if (projectStartDate) {
+    //   let item = {
+    //     name: dateString(projectStartDate),
+    //   };
+    //   array.push(item);
+    // }
+
+    // const datas = milestoneList.map(m => {
+    //   let item = {
+    //     name: dateString(m.releaseDueDate),
+    //   };
+
+    // })
+
+    // clear state when update chart data
+    setSpaceUrl('');
+    setApiKey('');
+    setProjecsList([]);
+
+    setFormData(formData);
+    setChartState(chartState.concat(formData));
     console.log('formData:', formData);
   };
 
   return (
     <Grid>
-      <Panel></Panel>
+      {chartState.map((v, index) => {
+        return formData ? (
+          <Panel key={index}>
+            <ResponsiveContainer>
+              <LineChart
+                width={600}
+                height={300}
+                data={v[formData]}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
+                {(() => {
+                  return milestoneList.map((release) => (
+                    <Line type="monotone" dataKey={release.name} />
+                  ));
+                })()}
+              </LineChart>
+            </ResponsiveContainer>
+          </Panel>
+        ) : null;
+      })}
       <AddPanel>
         {toggleState ? (
           <Config>
@@ -242,7 +302,7 @@ export const MainGrid = (): JSX.Element => {
                     </Select>
                   </ConfigFormItem>
 
-                  <ConfigFormItem>
+                  {/* <ConfigFormItem>
                     <Box>Milestone</Box>
                     <Select
                       labelId="demo-simple-select-label"
@@ -261,11 +321,11 @@ export const MainGrid = (): JSX.Element => {
                           })
                         : null}
                     </Select>
-                  </ConfigFormItem>
+                  </ConfigFormItem> */}
                 </>
               ) : null}
 
-              {issueType & milestoneItem ? (
+              {issueType ? (
                 <Buttons.Button
                   color={Buttons.Color.primary}
                   variant={Buttons.Variant.contained}
@@ -275,11 +335,10 @@ export const MainGrid = (): JSX.Element => {
                       ApiKey: ApiKey,
                       projectId: projectId,
                       issueType: issueType,
-                      milestoneItem: milestoneItem,
                     })
                   }
                 >
-                  Apply
+                  Add
                 </Buttons.Button>
               ) : null}
             </ConfigForm>
