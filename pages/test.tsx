@@ -27,18 +27,12 @@ import {
 
 const sortMilestones = (milestones: List<Milestone>): List<Milestone> =>
   milestones
-    .filter(
-      (milestone: Milestone) =>
-        milestone.backlogMilestone.name.includes('Sprint') &&
-        milestone.backlogMilestone.startDate &&
-        milestone.backlogMilestone.releaseDueDate
-    )
-    .sort((n1, n2) => {
-      return (
+    .filter((milestone: Milestone) => milestone.isSprint())
+    .sort(
+      (n1, n2) =>
         n1.backlogMilestone.startDate.getTime() -
         n2.backlogMilestone.startDate.getTime()
-      );
-    });
+    );
 
 const Test = (): JSX.Element => {
   const [projectId, setProjectId] = useState(null);

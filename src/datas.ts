@@ -67,8 +67,20 @@ export const dateString = (d: Date): string => d.toLocaleDateString('ja');
 export interface Milestone {
   readonly backlogMilestone: BacklogMilestone;
   readonly totalPoint: number;
+  startDate: () => Date;
+  releaseDueDate: () => Date;
+  isSprint: () => boolean;
 }
 export const Milestone = (
   backlogMilestone: BacklogMilestone,
   totalPoint: number
-): Milestone => ({ backlogMilestone, totalPoint });
+): Milestone => ({
+  backlogMilestone,
+  totalPoint,
+  startDate: () => backlogMilestone.startDate,
+  releaseDueDate: () => backlogMilestone.releaseDueDate,
+  isSprint: () =>
+    backlogMilestone.name.includes('Sprint') &&
+    backlogMilestone.startDate != null &&
+    backlogMilestone.releaseDueDate != null,
+});
