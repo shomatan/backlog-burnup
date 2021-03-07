@@ -85,11 +85,20 @@ export const Milestone = (
     backlogMilestone.releaseDueDate != null,
 });
 
-export const sortMilestones = (milestones: List<Milestone>): List<Milestone> =>
-  milestones
-    .filter((milestone: Milestone) => milestone.isSprint())
-    .sort(
-      (n1, n2) =>
-        n1.backlogMilestone.startDate.getTime() -
-        n2.backlogMilestone.startDate.getTime()
-    );
+export interface Milestones {
+  readonly items: List<Milestone>;
+  sortByDate: () => Milestones;
+}
+export const Milestones = (items: List<Milestone>) => ({
+  items,
+  sortByDate: () =>
+    Milestones(
+      items
+        .filter((milestone: Milestone) => milestone.isSprint())
+        .sort(
+          (n1, n2) =>
+            n1.backlogMilestone.startDate.getTime() -
+            n2.backlogMilestone.startDate.getTime()
+        )
+    ),
+});

@@ -18,7 +18,7 @@ import {
   Issue,
   List,
   Milestone,
-  sortMilestones,
+  Milestones,
   sumPoint,
 } from '../src/datas';
 import {
@@ -75,7 +75,7 @@ const Test = (): JSX.Element => {
       // set graph
       let latest = 0;
       let sum = 0;
-      const sortedMilestones = sortMilestones(computed);
+      const sorted = Milestones(computed).sortByDate();
 
       let array = [];
       if (projectStartDate) {
@@ -89,7 +89,7 @@ const Test = (): JSX.Element => {
         array.push(item);
       }
 
-      const datas = sortedMilestones.map((milestone: Milestone) => {
+      const datas = sorted.items.map((milestone: Milestone) => {
         let item = {
           name: dateString(milestone.backlogMilestone.releaseDueDate),
         };
@@ -124,7 +124,7 @@ const Test = (): JSX.Element => {
     (async () => {
       const items = await fetchMilestones(projectKey);
       const computed = items.map((item) => Milestone(item, 0));
-      const sorted = sortMilestones(computed);
+      const sorted = Milestones(computed).sortByDate;
 
       if (sorted.length > 0) {
         setProjectStartDate(sorted[0].backlogMilestone.startDate);
