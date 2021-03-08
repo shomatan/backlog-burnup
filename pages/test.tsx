@@ -32,7 +32,7 @@ const Test = (): JSX.Element => {
   const [projectStartDate, setProjectStartDate] = useState<Date>(null);
   const [issueTypeId, setIssueTypeId] = useState(null);
   const [issues, setIssues] = useState(null);
-  const [milestones, setMilestones] = useState(null);
+  const [milestones, setMilestones] = useState<Milestones>(Milestones([]));
   const [backlogMilestones, setBacklogMilestones] = useState<
     List<BacklogMilestone>
   >(null);
@@ -64,7 +64,7 @@ const Test = (): JSX.Element => {
         );
         return Milestone(item, sumPoint(milestoneIssues));
       });
-      setMilestones(computed);
+      setMilestones(Milestones(computed));
 
       // Release milestones
       const releaseItems = Milestones(computed).toReleases();
@@ -121,11 +121,11 @@ const Test = (): JSX.Element => {
     if (backlogMilestones) return;
     (async () => {
       const items = await fetchMilestones(projectKey);
-      const computed = items.map((item) => Milestone(item, 0));
-      const sorted = Milestones(computed).sortByDate;
+      const computed = Milestones(items.map((item) => Milestone(item, 0)));
+      const sorted = computed.sortByDate();
 
-      if (sorted.length > 0) {
-        setProjectStartDate(sorted[0].backlogMilestone.startDate);
+      if (sorted.length() > 0) {
+        setProjectStartDate(sorted.items[0].startDate());
       }
       setBacklogMilestones(items);
       setMilestones(computed);
