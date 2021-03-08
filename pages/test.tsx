@@ -39,7 +39,6 @@ const Test = (): JSX.Element => {
   const [data, setData] = useState([]);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
-  const sprintDays = 7;
 
   const onIssueTypeChange = async (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -149,7 +148,6 @@ const Test = (): JSX.Element => {
             }
           })()}
         </p>
-        <p>Days per Sprint: {sprintDays} days / sprint</p>
       </section>
       <IssueTypesComponent
         projectKey={projectKey}
