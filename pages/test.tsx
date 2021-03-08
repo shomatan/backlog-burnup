@@ -12,16 +12,7 @@ import { IssuesComponent } from '../src/components/IssuesComponent';
 import { IssueTypesComponent } from '../src/components/IssueTypesComponent';
 import { MilestonesComponent } from '../src/components/MilestonesComponent';
 import { ProjectComponent } from '../src/components/ProjectComponent';
-import {
-  BacklogMilestone,
-  dateString,
-  Issue,
-  List,
-  Milestone,
-  Milestones,
-  Releases,
-  sumPoint,
-} from '../src/datas';
+import { dateString, Milestone, Milestones, Releases } from '../src/datas';
 import {
   fetchIssuesOfIssueType,
   fetchMilestones,
@@ -69,14 +60,7 @@ const Test = (): JSX.Element => {
 
       let array = [];
       if (projectStartDate) {
-        let item = {
-          name: dateString(projectStartDate),
-        };
-        releaseItems.items.map((release: Milestone) => {
-          item[release.backlogMilestone.name] = release.totalPoint;
-          item['forecast'] = 0;
-        });
-        array.push(item);
+        array.push(releaseItems.getHorizontalLines(projectStartDate));
       }
 
       const datas = sorted.items.map((milestone: Milestone) => {

@@ -131,7 +131,23 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
 
 export interface Releases {
   readonly items: List<Milestone>;
+  getHorizontalLines: (startDate: Date) => HorizontalLines;
 }
 export const Releases = (items: List<Milestone>): Releases => ({
   items,
+  getHorizontalLines: (startDate: Date) => {
+    let item = {} as HorizontalLines;
+    item['name'] = dateString(startDate);
+    items.map((release: Milestone) => {
+      item[release.backlogMilestone.name] = release.totalPoint.toString();
+      item['forecast'] = '0';
+    });
+    return item;
+  },
 });
+
+export type HorizontalLines = {
+  date: string;
+  [name: string]: string;
+  forecast: string;
+};
