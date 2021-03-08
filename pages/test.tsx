@@ -55,25 +55,17 @@ const Test = (): JSX.Element => {
       const fetchIssues = await fetchIssuesOfIssueType(projectId, id);
       setIssues(fetchIssues);
 
-      const computed = backlogMilestones.map((item: BacklogMilestone) => {
-        const milestoneIssues = fetchIssues.filter(
-          (issue: Issue) =>
-            issue.milestones.findIndex(
-              (milestone) => item.id == milestone.id
-            ) != -1
-        );
-        return Milestone(item, sumPoint(milestoneIssues));
-      });
-      setMilestones(Milestones(computed));
+      const computed = backlogMilestones.filterByIssues(fetchIssues);
+      setMilestones(computed);
 
       // Release milestones
-      const releaseItems = Milestones(computed).toReleases();
+      const releaseItems = computed.toReleases();
       setReleases(releaseItems);
 
       // set graph
       let latest = 0;
       let sum = 0;
-      const sorted = Milestones(computed).sortByDate();
+      const sorted = computed.sortByDate();
 
       let array = [];
       if (projectStartDate) {

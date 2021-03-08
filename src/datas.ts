@@ -92,6 +92,7 @@ export interface Milestones {
   toReleases: () => Releases;
   nonEmpty: () => boolean;
   isEmpty: () => boolean;
+  filterByIssues: (issues: List<Issue>) => Milestones;
 }
 export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
@@ -114,6 +115,18 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
     ),
   nonEmpty: () => items && items.length > 0,
   isEmpty: () => !items || items.length == 0,
+  filterByIssues: (issues: List<Issue>) => {
+    const filtered = items.map((item: Milestone) => {
+      const milestoneIssues = issues.filter(
+        (issue: Issue) =>
+          issue.milestones.findIndex(
+            (milestone) => item.backlogMilestone.id == milestone.id
+          ) != -1
+      );
+      return Milestone(item.backlogMilestone, sumPoint(milestoneIssues));
+    });
+    return Milestones(filtered);
+  },
 });
 
 export interface Releases {
