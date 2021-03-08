@@ -1,4 +1,11 @@
-import { Issue, IssueType, BacklogMilestone, Project } from '../datas';
+import {
+  Issue,
+  IssueType,
+  BacklogMilestone,
+  Project,
+  Milestone,
+  Milestones,
+} from '../datas';
 
 export const fetchProjectInfo = async (
   projectKey: string
@@ -20,11 +27,10 @@ export const fetchIssueType = async (
 
 export const fetchMilestones = async (
   projectKey: string
-): Promise<ReadonlyArray<BacklogMilestone>> => {
+): Promise<Milestones> => {
   const res = await fetchBacklog(`/api/v2/projects/${projectKey}/versions`);
   const json = await res.json();
-
-  return json
+  const items = json
     .map((item: any) => {
       let startDate = null;
       if (item.startDate) {
@@ -42,7 +48,10 @@ export const fetchMilestones = async (
         item.archived
       );
     })
-    .filter((item: BacklogMilestone) => !item.archived);
+    .filter((item: BacklogMilestone) => !item.archived)
+    .map((item: BacklogMilestone) => Milestone(item, 0));
+
+  return Milestones(items);
 };
 
 export const fetchIssuesOfIssueType = async (

@@ -90,6 +90,8 @@ export interface Milestones {
   sortByDate: () => Milestones;
   length: () => number;
   toReleases: () => Releases;
+  nonEmpty: () => boolean;
+  isEmpty: () => boolean;
 }
 export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
@@ -110,6 +112,8 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
         milestone.backlogMilestone.name.includes('Release')
       )
     ),
+  nonEmpty: () => items && items.length > 0,
+  isEmpty: () => !items || items.length == 0,
 });
 
 export interface Releases {
