@@ -193,8 +193,4 @@ const Test = (): JSX.Element => {
   );
 };
 
-/* interface { */
-/*   readonly */
-/* } */
-
 export default Test;

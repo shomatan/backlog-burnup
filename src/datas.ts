@@ -88,8 +88,9 @@ export const Milestone = (
 export interface Milestones {
   readonly items: List<Milestone>;
   sortByDate: () => Milestones;
+  length: () => number;
 }
-export const Milestones = (items: List<Milestone>) => ({
+export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
   sortByDate: () =>
     Milestones(
@@ -101,4 +102,5 @@ export const Milestones = (items: List<Milestone>) => ({
             n2.backlogMilestone.startDate.getTime()
         )
     ),
+  length: () => items.length,
 });
