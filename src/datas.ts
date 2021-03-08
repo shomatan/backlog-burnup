@@ -89,6 +89,7 @@ export interface Milestones {
   readonly items: List<Milestone>;
   sortByDate: () => Milestones;
   length: () => number;
+  toReleases: () => Releases;
 }
 export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
@@ -103,4 +104,17 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
         )
     ),
   length: () => items.length,
+  toReleases: () =>
+    Releases(
+      items.filter((milestone: Milestone) =>
+        milestone.backlogMilestone.name.includes('Release')
+      )
+    ),
+});
+
+export interface Releases {
+  readonly items: List<Milestone>;
+}
+export const Releases = (items: List<Milestone>): Releases => ({
+  items,
 });

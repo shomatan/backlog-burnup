@@ -19,6 +19,7 @@ import {
   List,
   Milestone,
   Milestones,
+  Releases,
   sumPoint,
 } from '../src/datas';
 import {
@@ -35,7 +36,7 @@ const Test = (): JSX.Element => {
   const [backlogMilestones, setBacklogMilestones] = useState<
     List<BacklogMilestone>
   >(null);
-  const [releases, setReleases] = useState<List<Milestone>>([]);
+  const [releases, setReleases] = useState<Releases>(Releases([]));
   const [data, setData] = useState([]);
 
   const projectKey = process.env.BACKLOG_PROJECT_KEY;
@@ -66,9 +67,7 @@ const Test = (): JSX.Element => {
       setMilestones(computed);
 
       // Release milestones
-      const releaseItems = computed.filter((milestone: Milestone) =>
-        milestone.backlogMilestone.name.includes('Release')
-      );
+      const releaseItems = Milestones(computed).toReleases();
       setReleases(releaseItems);
 
       // set graph
@@ -81,7 +80,7 @@ const Test = (): JSX.Element => {
         let item = {
           name: dateString(projectStartDate),
         };
-        releaseItems.map((release: Milestone) => {
+        releaseItems.items.map((release: Milestone) => {
           item[release.backlogMilestone.name] = release.totalPoint;
           item['forecast'] = 0;
         });
@@ -99,7 +98,7 @@ const Test = (): JSX.Element => {
         } else {
           sum = sum + latest;
         }
-        releaseItems.map((release: Milestone) => {
+        releaseItems.items.map((release: Milestone) => {
           item[release.backlogMilestone.name] = release.totalPoint;
           item['forecast'] = sum;
         });
@@ -176,7 +175,7 @@ const Test = (): JSX.Element => {
                 <Legend />
                 <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
                 {(() => {
-                  return releases.map((release: Milestone) => (
+                  return releases.items.map((release: Milestone) => (
                     <Line
                       type="monotone"
                       dataKey={release.backlogMilestone.name}
