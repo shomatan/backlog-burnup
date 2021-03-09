@@ -91,7 +91,8 @@ export const Milestone = (
 
 export interface Milestones {
   readonly items: List<Milestone>;
-  sortByDate: () => Milestones;
+  sortByStartDate: () => Milestones;
+  sortByEndDate: (predicate: (milestone: Milestone) => boolean) => Milestones;
   length: () => number;
   toReleases: () => Releases;
   nonEmpty: () => boolean;
@@ -101,7 +102,7 @@ export interface Milestones {
 }
 export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
-  sortByDate: () =>
+  sortByStartDate: () =>
     Milestones(
       items
         .filter((milestone: Milestone) => milestone.isSprint())
@@ -109,6 +110,16 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
           (n1, n2) =>
             n1.backlogMilestone.startDate.getTime() -
             n2.backlogMilestone.startDate.getTime()
+        )
+    ),
+  sortByEndDate: (predicate: (milestone: Milestone) => boolean) =>
+    Milestones(
+      items
+        .filter((milestone: Milestone) => predicate(milestone))
+        .sort(
+          (n1, n2) =>
+            n1.backlogMilestone.releaseDueDate.getTime() -
+            n2.backlogMilestone.releaseDueDate.getTime()
         )
     ),
   length: () => items.length,
@@ -131,12 +142,14 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
   getGraphLines: (releases: Releases) => {
     let latest = 0;
     let sum = 0;
+    const sortedReleases = releases.sortByEndDate();
     const results = Milestones(items)
-      .sortByDate()
+      .sortByStartDate()
       .items.map((milestone: Milestone) => {
         let item = {
           name: dateString(milestone.backlogMilestone.releaseDueDate),
         };
+        let sumPoint: number = 0;
         const current = milestone.totalPoint;
         if (current > 0) {
           latest = current;
@@ -144,8 +157,9 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
         } else {
           sum = sum + latest;
         }
-        releases.items.map((release: Milestone) => {
-          item[release.backlogMilestone.name] = release.totalPoint;
+        sortedReleases.items.map((release: Milestone) => {
+          sumPoint += release.totalPoint;
+          item[release.backlogMilestone.name] = sumPoint;
           item['forecast'] = sum;
         });
         return item;
@@ -157,16 +171,32 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
 export interface Releases {
   readonly items: List<Milestone>;
   getHorizontalLines: (startDate: Date) => any;
+  sortByEndDate: () => Releases;
 }
 export const Releases = (items: List<Milestone>): Releases => ({
   items,
   getHorizontalLines: (startDate: Date) => {
+    const sorted = Milestones(items).sortByEndDate((milestone: Milestone) =>
+      milestone.isRelease()
+    );
     let item = {};
+    let sumPoint: number = 0;
     item['name'] = dateString(startDate);
-    items.map((release: Milestone) => {
-      item[release.backlogMilestone.name] = release.totalPoint.toString();
+    sorted.items.map((release: Milestone) => {
+      sumPoint += release.totalPoint;
+      item[release.backlogMilestone.name] = sumPoint;
       item['forecast'] = 0;
     });
     return item;
   },
+  sortByEndDate: () =>
+    Releases(
+      items
+        .filter((milestone: Milestone) => milestone.isRelease())
+        .sort(
+          (n1, n2) =>
+            n1.backlogMilestone.releaseDueDate.getTime() -
+            n2.backlogMilestone.releaseDueDate.getTime()
+        )
+    ),
 });

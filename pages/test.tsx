@@ -59,7 +59,9 @@ const Test = (): JSX.Element => {
         array.push(releaseItems.getHorizontalLines(projectStartDate));
       }
 
-      setData(array.concat(computed.sortByDate().getGraphLines(releaseItems)));
+      setData(
+        array.concat(computed.sortByStartDate().getGraphLines(releaseItems))
+      );
     }
   };
 
@@ -74,7 +76,7 @@ const Test = (): JSX.Element => {
     if (backlogMilestones.nonEmpty()) return;
     (async () => {
       const items = await fetchMilestones(projectKey);
-      const sorted = items.sortByDate();
+      const sorted = items.sortByStartDate();
 
       if (sorted.length() > 0) {
         setProjectStartDate(sorted.items[0].startDate());
