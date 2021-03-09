@@ -70,6 +70,7 @@ export interface Milestone {
   startDate: () => Date;
   releaseDueDate: () => Date;
   isSprint: () => boolean;
+  isRelease: () => boolean;
 }
 export const Milestone = (
   backlogMilestone: BacklogMilestone,
@@ -82,6 +83,9 @@ export const Milestone = (
   isSprint: () =>
     backlogMilestone.name.includes('Sprint') &&
     backlogMilestone.startDate != null &&
+    backlogMilestone.releaseDueDate != null,
+  isRelease: () =>
+    backlogMilestone.name.includes('Release') &&
     backlogMilestone.releaseDueDate != null,
 });
 
@@ -109,11 +113,7 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
     ),
   length: () => items.length,
   toReleases: () =>
-    Releases(
-      items.filter((milestone: Milestone) =>
-        milestone.backlogMilestone.name.includes('Release')
-      )
-    ),
+    Releases(items.filter((milestone: Milestone) => milestone.isRelease())),
   nonEmpty: () => items && items.length > 0,
   isEmpty: () => !items || items.length == 0,
   filterByIssues: (issues: List<Issue>) => {
