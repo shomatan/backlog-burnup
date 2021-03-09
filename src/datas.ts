@@ -140,8 +140,9 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
     return Milestones(filtered);
   },
   getGraphLines: (releases: Releases) => {
-    let latest = 0;
     let sum = 0;
+    let avg = 0;
+    let count = 1;
     const sortedReleases = releases.sortByEndDate();
     const results = Milestones(items)
       .sortByStartDate()
@@ -152,11 +153,17 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
         let sumPoint: number = 0;
         const current = milestone.totalPoint;
         if (current > 0) {
-          latest = current;
           sum = sum + current;
+          if (count > 1) {
+            avg = sum / count;
+          }
         } else {
-          sum = sum + latest;
+          // predict
+          sum = sum + avg;
         }
+
+        count++;
+
         sortedReleases.items.map((release: Milestone) => {
           sumPoint += release.totalPoint;
           item[release.backlogMilestone.name] = sumPoint;
