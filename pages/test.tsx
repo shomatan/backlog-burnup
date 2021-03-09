@@ -54,35 +54,12 @@ const Test = (): JSX.Element => {
       setReleases(releaseItems);
 
       // set graph
-      let latest = 0;
-      let sum = 0;
-      const sorted = computed.sortByDate();
-
       let array = [];
       if (projectStartDate) {
         array.push(releaseItems.getHorizontalLines(projectStartDate));
       }
 
-      const datas = sorted.items.map((milestone: Milestone) => {
-        let item = {
-          name: dateString(milestone.backlogMilestone.releaseDueDate),
-        };
-        const current = milestone.totalPoint;
-        if (current > 0) {
-          latest = current;
-          sum = sum + current;
-        } else {
-          sum = sum + latest;
-        }
-        releaseItems.items.map((release: Milestone) => {
-          item[release.backlogMilestone.name] = release.totalPoint;
-          item['forecast'] = sum;
-        });
-
-        return item;
-      });
-
-      setData(array.concat(datas));
+      setData(array.concat(computed.sortByDate().getGraphLines(releaseItems)));
     }
   };
 

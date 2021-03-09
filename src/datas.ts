@@ -93,6 +93,7 @@ export interface Milestones {
   nonEmpty: () => boolean;
   isEmpty: () => boolean;
   filterByIssues: (issues: List<Issue>) => Milestones;
+  getGraphLines: (releases: Releases) => any;
 }
 export const Milestones = (items: List<Milestone>): Milestones => ({
   items,
@@ -127,27 +128,45 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
     });
     return Milestones(filtered);
   },
+  getGraphLines: (releases: Releases) => {
+    let latest = 0;
+    let sum = 0;
+    const results = Milestones(items)
+      .sortByDate()
+      .items.map((milestone: Milestone) => {
+        let item = {
+          name: dateString(milestone.backlogMilestone.releaseDueDate),
+        };
+        const current = milestone.totalPoint;
+        if (current > 0) {
+          latest = current;
+          sum = sum + current;
+        } else {
+          sum = sum + latest;
+        }
+        releases.items.map((release: Milestone) => {
+          item[release.backlogMilestone.name] = release.totalPoint;
+          item['forecast'] = sum;
+        });
+        return item;
+      });
+    return results;
+  },
 });
 
 export interface Releases {
   readonly items: List<Milestone>;
-  getHorizontalLines: (startDate: Date) => HorizontalLines;
+  getHorizontalLines: (startDate: Date) => any;
 }
 export const Releases = (items: List<Milestone>): Releases => ({
   items,
   getHorizontalLines: (startDate: Date) => {
-    let item = {} as HorizontalLines;
+    let item = {};
     item['name'] = dateString(startDate);
     items.map((release: Milestone) => {
       item[release.backlogMilestone.name] = release.totalPoint.toString();
-      item['forecast'] = '0';
+      item['forecast'] = 0;
     });
     return item;
   },
 });
-
-export type HorizontalLines = {
-  date: string;
-  [name: string]: string;
-  forecast: string;
-};
