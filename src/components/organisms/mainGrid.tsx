@@ -5,7 +5,6 @@ import { jsx, css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as Icon from '../atom/icon';
 import { Box, TextField, Select, MenuItem } from '@material-ui/core';
-import Input from '@material-ui/core/Input';
 import * as Buttons from '../atom/buttons';
 import {
   fetchProjectsList,
@@ -110,8 +109,8 @@ export const MainGrid = (): JSX.Element => {
 
   useEffect(() => {
     // for dev
-    if (process.env.BACKLOG_URL) setSpaceUrl(process.env.BACKLOG_URL);
-    if (process.env.BACKLOG_API_KEY) setApiKey(process.env.BACKLOG_API_KEY);
+    // if (process.env.BACKLOG_URL) setSpaceUrl(process.env.BACKLOG_URL);
+    // if (process.env.BACKLOG_API_KEY) setApiKey(process.env.BACKLOG_API_KEY);
 
     if (!spaceUrl || !ApiKey) return;
     (async () => {
@@ -136,17 +135,6 @@ export const MainGrid = (): JSX.Element => {
     }
   }, [projectId, issueType]);
 
-  // useEffect(() => {
-  //   if (projectId) {
-  //     (async () => {
-  //       const i = await fetchMilestones(
-  //         projecsList.find((p) => p.id === projectId).projectKey
-  //       );
-  //       setMilestoneList(i);
-  //     })();
-  //   }
-  // }, [projectId, milestoneItem]);
-
   const changeProject = (event) => {
     setProjectId(event.target.value);
   };
@@ -160,41 +148,27 @@ export const MainGrid = (): JSX.Element => {
   // };
 
   const ClickApply = (formData) => {
-    // let array = [];
-    // if (projectStartDate) {
-    //   let item = {
-    //     name: dateString(projectStartDate),
-    //   };
-    //   array.push(item);
-    // }
-
-    // const datas = milestoneList.map(m => {
-    //   let item = {
-    //     name: dateString(m.releaseDueDate),
-    //   };
-
-    // })
-
     // clear state when update chart data
+
+    // setFormData(formData);
+    console.log('milestoneList:', milestoneList);
     setSpaceUrl('');
     setApiKey('');
-    setProjecsList([]);
-
-    setFormData(formData);
+    setProjectId(0);
+    setIssueType(0);
     setChartState(chartState.concat(formData));
-    console.log('formData:', formData);
   };
 
   return (
     <Grid>
       {chartState.map((v, index) => {
-        return formData ? (
+        return chartState ? (
           <Panel key={index}>
             <ResponsiveContainer>
               <LineChart
                 width={600}
                 height={300}
-                data={v[formData]}
+                data={v}
                 margin={{
                   top: 20,
                   right: 30,
