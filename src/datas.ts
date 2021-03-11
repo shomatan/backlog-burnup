@@ -153,13 +153,13 @@ export const Milestones = (items: List<Milestone>): Milestones => ({
         let sumPoint: number = 0;
         const current = milestone.totalPoint;
         if (current > 0) {
-          sum = sum + current;
+          sum += current;
           if (count > 1) {
             avg = sum / count;
           }
         } else {
           // predict
-          sum = sum + avg;
+          sum += avg;
         }
 
         count++;
