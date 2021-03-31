@@ -28,16 +28,17 @@ export const GlobalStyle = css`
 const App = styled.div({
   display: 'grid',
   // height: "100%",
-  gridTemplateColumns: '200px 1fr',
+  gridTemplateColumns: '230px 1fr',
   gridTemplateAreas: `
     "Nav Main"
     "Nav Main";
   `,
+  background: '#eff4f6',
 });
 
 const Main = styled.div({
   gridArea: 'Main',
-  padding: '40px 26px 30px',
+  padding: '20px 26px 20px',
 });
 
 export const Home = (): JSX.Element => {

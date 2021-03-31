@@ -7,7 +7,7 @@ import * as Icon from '../atom/icon';
 const Title = styled.h1({
   display: 'flex',
   alignItems: 'center',
-  fontSize: '1.4rem',
+  fontSize: '1.2rem',
   justifyContent: 'space-between',
   color: '#59B6A7',
   margin: '0 0 auto 0',
@@ -18,10 +18,13 @@ const Github = styled.div({});
 const NavStyled = styled.div({
   // width: 200,
   gridArea: 'Nav',
-  borderRight: '1px solid #EEEEEE',
-  padding: '40px 26px 30px',
+  padding: '30px 20px 30px',
   display: 'grid',
   gridTemplateRows: '70px 1fr 100px',
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  margin: '20px 20px 20px 40px',
+  borderRadius: 10,
+  background: '#fff',
 });
 
 const NavList = styled.div({
@@ -42,6 +45,7 @@ const Li = styled.li({
 
 const LinkText = styled.a({
   display: 'block',
+  fontSize: '1.3rem',
   color: '#59B6A7',
   padding: '10px 0',
   textDecoration: 'none',

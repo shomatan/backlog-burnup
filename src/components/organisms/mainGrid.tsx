@@ -38,10 +38,12 @@ const Panel = styled.div({
 
 const AddPanel = styled.div({
   display: 'flex',
-  background: '#F3F3F3',
+  // background: '#F3F3F3',
+  background: '#fff',
   borderRadius: 8,
   color: '#59B6A7',
   height: 350,
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
 });
 
 const AddPanelInner = styled.div({
