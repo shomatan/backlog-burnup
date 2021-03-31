@@ -100,9 +100,7 @@ export const MainGrid = (): JSX.Element => {
     ReadonlyArray<IssueType>
   >(null);
   const [issueType, setIssueType] = React.useState(0);
-  const [milestoneList, setMilestoneList] = React.useState<
-    ReadonlyArray<BacklogMilestone>
-  >(null);
+  const [milestoneList, setMilestoneList] = React.useState(null);
   // const [milestoneItem, setMilestoneItem] = React.useState(0);
   // const [release, setRelease] = React.useState(null);
   const [projectStartDate, setProjectStartDate] = useState<Date>(null);
@@ -183,9 +181,13 @@ export const MainGrid = (): JSX.Element => {
                 <Legend />
                 <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
                 {(() => {
-                  return milestoneList.map((release) => (
-                    <Line type="monotone" dataKey={release.name} />
-                  ));
+                  return milestoneList.items.map((release) => {
+                    console.log('release:', release);
+                    <Line
+                      type="monotone"
+                      dataKey={release.backlogMilestone.name}
+                    />;
+                  });
                 })()}
               </LineChart>
             </ResponsiveContainer>

@@ -1,12 +1,12 @@
-import { List, Milestone } from '../datas';
+import { List, Milestone, Milestones } from '../datas';
 
 interface Props {
-  readonly milestones: List<Milestone>;
+  readonly milestones: Milestones;
 }
 
 export const MilestonesComponent = (props: Props): JSX.Element => {
   const milestoneItems = (items: List<Milestone>) => {
-    if (!items) return <></>;
+    if (items.length == 0) return <></>;
     return items.map((item) => {
       return (
         <li key={item.backlogMilestone.id}>
@@ -19,7 +19,7 @@ export const MilestonesComponent = (props: Props): JSX.Element => {
   return (
     <>
       <h3>Milestones</h3>
-      {milestoneItems(props.milestones)}
+      {milestoneItems(props.milestones.items)}
     </>
   );
 };
