@@ -21,7 +21,7 @@ const NavStyled = styled.div({
   padding: '30px 20px 30px',
   display: 'grid',
   gridTemplateRows: '70px 1fr 100px',
-  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  boxShadow: '0 0 30px rgb(0, 0, 0, 0.1)',
   margin: '20px 20px 20px 40px',
   borderRadius: 10,
   background: '#fff',

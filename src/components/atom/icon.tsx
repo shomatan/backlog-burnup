@@ -63,3 +63,14 @@ export const Close = (props): JSX.Element => {
     </svg>
   );
 };
+
+export const Ellipsis = (props): JSX.Element => {
+  return (
+    <svg {...props} width="4" height="21" viewBox="0 0 4 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="2" cy="2" r="2" fill="currentColor"/>
+      <circle cx="2" cy="11" r="2" fill="currentColor"/>
+      <circle cx="2" cy="19" r="2" fill="currentColor"/>
+    </svg>
+  );
+}
+

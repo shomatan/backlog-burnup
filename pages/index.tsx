@@ -38,7 +38,8 @@ const App = styled.div({
 
 const Main = styled.div({
   gridArea: 'Main',
-  padding: '20px 26px 20px',
+  padding: '20px 40px 20px 26px',
+  overflowY: 'scroll',
 });
 
 export const Home = (): JSX.Element => {

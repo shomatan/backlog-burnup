@@ -30,20 +30,28 @@ const Grid = styled.div({
 });
 
 const Panel = styled.div({
-  padding: 10,
-  boxShadow: '0 0 30px rgba(0,0,0,0.15)',
-  borderRadius: 8,
+  position: 'relative',
+  boxShadow: '0 0 30px rgb(0, 0, 0, 0.1)',
+  borderRadius: 10,
   height: 350,
+  background: '#fff',
+  padding: '20px 50px 20px 30px',
 });
+
+const EllipsisIcon = css({
+  position: 'absolute',
+  top: 14,
+  right: 20,
+})
 
 const AddPanel = styled.div({
   display: 'flex',
   // background: '#F3F3F3',
   background: '#fff',
-  borderRadius: 8,
+  borderRadius: 10,
   color: '#59B6A7',
   height: 350,
-  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  boxShadow: '0 0 30px rgb(0, 0, 0, 0.1)',
 });
 
 const AddPanelInner = styled.div({
@@ -164,6 +172,10 @@ export const MainGrid = (): JSX.Element => {
       {chartState.map((v, index) => {
         return chartState ? (
           <Panel key={index}>
+            <Icon.Ellipsis
+              css={EllipsisIcon}
+              // onClick={() => alert("Ellipsis")}
+            />
             <ResponsiveContainer>
               <LineChart
                 width={600}
