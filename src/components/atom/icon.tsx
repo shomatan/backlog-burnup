@@ -74,3 +74,10 @@ export const Ellipsis = (props): JSX.Element => {
   );
 }
 
+export const LeftSlide = (props): JSX.Element => {
+  return (
+    <svg {...props} width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 0.707H16V12.707H14V0.707ZM0 7.707H8.586L4.293 12L5.707 13.414L12.414 6.707L5.707 0L4.293 1.414L8.586 5.707H0V7.707Z" fill="currentColor"/>
+    </svg>
+  )
+}

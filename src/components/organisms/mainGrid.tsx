@@ -22,6 +22,7 @@ import {
   YAxis,
   ResponsiveContainer,
 } from 'recharts';
+import { Overlay } from './overlay';
 
 const Grid = styled.div({
   display: 'grid',
@@ -42,6 +43,7 @@ const EllipsisIcon = css({
   position: 'absolute',
   top: 14,
   right: 20,
+  cursor: 'pointer',
 })
 
 const AddPanel = styled.div({
@@ -114,6 +116,7 @@ export const MainGrid = (): JSX.Element => {
   // const [milestoneItem, setMilestoneItem] = React.useState(0);
   // const [release, setRelease] = React.useState(null);
   const [projectStartDate, setProjectStartDate] = useState<Date>(null);
+  const [overlayState, setOverlayState] = useState(false)
 
   useEffect(() => {
     // for dev
@@ -151,6 +154,10 @@ export const MainGrid = (): JSX.Element => {
     setIssueType(event.target.value);
   };
 
+  const toggleOverlay = (state) => {
+    setOverlayState(state);
+  }
+
   // const changeMilestone = (event) => {
   //   setMilestoneItem(event.target.value);
   // };
@@ -159,7 +166,7 @@ export const MainGrid = (): JSX.Element => {
     // clear state when update chart data
 
     // setFormData(formData);
-    console.log('milestoneList:', milestoneList);
+    // console.log('milestoneList:', milestoneList);
     setSpaceUrl('');
     setApiKey('');
     setProjectId(0);
@@ -168,13 +175,14 @@ export const MainGrid = (): JSX.Element => {
   };
 
   return (
+    <>
     <Grid>
       {chartState.map((v, index) => {
         return chartState ? (
           <Panel key={index}>
             <Icon.Ellipsis
               css={EllipsisIcon}
-              // onClick={() => alert("Ellipsis")}
+              onClick={() => toggleOverlay(!overlayState)}
             />
             <ResponsiveContainer>
               <LineChart
@@ -340,6 +348,87 @@ export const MainGrid = (): JSX.Element => {
         )}
       </AddPanel>
     </Grid>
+    <Overlay enable={overlayState} onClick={() => toggleOverlay(!overlayState)}>
+      <ConfigForm>
+        <Space>
+          <Box>https://</Box>
+          <TextField
+            variant="standard"
+            margin="none"
+            required
+            id="url"
+            label="Backlog URL"
+            name="url"
+            autoComplete="url"
+            autoFocus
+            value={spaceUrl}
+            onChange={(e) => setSpaceUrl(e.target.value)}
+          />
+          <Box>.backlog.com</Box>
+        </Space>
+        <ConfigFormItem>
+          <Box>API Key</Box>
+          <TextField
+            variant="standard"
+            margin="none"
+            required
+            id="apiKey"
+            label="API Key"
+            name="apiKey"
+            autoComplete="apiKey"
+            value={ApiKey}
+            onChange={(e) => {
+              setApiKey(e.target.value);
+            }}
+          />
+        </ConfigFormItem>
+        {spaceUrl && ApiKey ? (
+          <ConfigFormItem>
+            <Box>Project</Box>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={projectId}
+              onChange={changeProject}
+            >
+              {projecsList
+                ? projecsList.map((data) => {
+                    return (
+                      <MenuItem key={data.id} value={data.id}>
+                        {data.name}
+                      </MenuItem>
+                    );
+                  })
+                : null}
+            </Select>
+          </ConfigFormItem>
+        ) : null}
+        {spaceUrl && ApiKey && projectId ? (
+          <>
+            <ConfigFormItem>
+              <Box>Issue Type</Box>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={issueType}
+                onChange={changeIssueType}
+              >
+                {issueTypeList
+                  ? issueTypeList.map((data) => {
+                      return (
+                        <MenuItem key={data.id} value={data.id}>
+                          {data.name}
+                        </MenuItem>
+                      );
+                    })
+                  : null}
+              </Select>
+            </ConfigFormItem>
+          </>
+        ) : null}
+      </ConfigForm>
+    </Overlay>
+    </>
   );
 };
 
