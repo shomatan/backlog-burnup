@@ -19,11 +19,12 @@ const OverlayStyled = styled.div({
     width: '55%',
     background: '#fff',
     zIndex: 100,
-    boxShadow: '0 0 30px rgb(0, 0, 0, 0.1)',
+    // boxShadow: '0 0 30px rgb(0, 0, 0, 0.1)',
     transition: '.5s cubic-bezier(0.23, 1, 0.32, 1)',
   },
   (props:Props) => ({
     transform: props.enable ? 'translateX(-100%)': 'translateX(0)',
+    boxShadow: props.enable ? '0 0 30px rgb(0, 0, 0, 0.1)' : 'none',
   })
 )
 
