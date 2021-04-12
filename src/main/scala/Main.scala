@@ -49,6 +49,11 @@ object Main {
   def start(obj: js.Any): Unit =
     js.Dynamic.global.console.log(obj.toString)
 
+  @JSExportTopLevel("onLoadHandler")
+  def onLoadHandler(): Unit = {
+    val webPageLoadedMessage = "Web page loaded successfully."
+    dom.window.alert(webPageLoadedMessage)
+  }
   // @JSExportTopLevel("onOpenImpl")
   // def onOpen(): Unit = {
   //   SpreadsheetApp
