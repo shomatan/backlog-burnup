@@ -1,5 +1,7 @@
 import facade.googleappsscript.GoogleAppsScript
 import facade.googleappsscript.html.HtmlOutput
+import org.scalajs.dom
+import org.scalajs.dom.document
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
@@ -28,6 +30,24 @@ object Main {
       override val projectKey = properties.getProperty("projectKey")
     }
   }
+
+  def appendPar(targetNode: dom.Node, text: String): Unit = {
+    val parNode = document.createElement("p")
+    parNode.textContent = text
+    targetNode.appendChild(parNode)
+  }
+
+  @JSExportTopLevel("addClickedMessage")
+  def addClickedMessage(): Unit = {
+    appendPar(document.body, "You clicked the button!")
+  }
+
+  // @JSExportTopLevel("onClick")
+  // def onCl
+
+  @JSExportTopLevel("start")
+  def start(obj: js.Any): Unit =
+    js.Dynamic.global.console.log(obj.toString)
 
   // @JSExportTopLevel("onOpenImpl")
   // def onOpen(): Unit = {

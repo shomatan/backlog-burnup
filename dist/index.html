@@ -1,41 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script>
-      // Prevent forms from submitting.
-      function preventFormSubmit() {
-        var forms = document.querySelectorAll('form');
-        for (var i = 0; i < forms.length; i++) {
-          forms[i].addEventListener('submit', function(event) {
-            event.preventDefault();
-          });
-        }
-      }
-      window.addEventListener('load', preventFormSubmit);
-      function onSuccess(result) {
-        google.script.host.close();
-      }
-      function onFailure(e) {
-        alert(e.message + "\n\n" + e.stack);
-      }
-      function handleFormSubmit(formObject, mode) {
-        switch (mode) {
-          case "init":
-            google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).init(formObject);
-            break;
-          case "run":
-            google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).run(formObject);
-            break;
-          default:
-            alert("Unknown mode: " + mode);
-        }
-      }
-    </script>
     <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
   </head>
   <body>
     <? var config = getConfig(); ?>
-    <form id="myForm" onsubmit="handleFormSubmit(this, 'init')">
+    <form id="myForm">
       <fieldset>
         <div class="row">
           <label for="spaceID">Space</label>
@@ -69,9 +39,10 @@
           <input id="projectKey" type="text" name="projectKey" value="<?= config.projectKey ?>" tabindex="4" />
         </div>
         <div class="button-area">
-          <input type="submit" class="button" value="Execute" tabindex="5" />
+          <input type="submit" class="button" value="Start" onclick="addClickedMessage()" tabindex="5" />
         </div>
       </fieldset>
     </form>
+    <?!= HtmlService.createHtmlOutputFromFile('bundle').getContent(); ?>
   </body>
 </html>
