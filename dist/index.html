@@ -31,11 +31,11 @@
         }
       }
     </script>
-    <?!= include('css'); ?>
+    <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
   </head>
   <body>
     <? var config = getConfig(); ?>
-    <form id="myForm" onsubmit="handleFormSubmit(this, '<?= mode ?>')">
+    <form id="myForm" onsubmit="handleFormSubmit(this, 'init')">
       <fieldset>
         <div class="row">
           <label for="spaceID">Space</label>

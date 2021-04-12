@@ -27,18 +27,18 @@ object Clasp {
       distFile
     )
 
-    val lines  = scala.io.Source.fromFile(distFile).getLines().toIndexedSeq
-    val insert = s"""
-    |function onOpen() {
-    |  return onOpenImpl();
-    |}
-    """.stripMargin
+    // val lines  = scala.io.Source.fromFile(distFile).getLines().toIndexedSeq
+    // val insert = s"""
+    // |function onOpen() {
+    // |  return onOpenImpl();
+    // |}
+    // """.stripMargin
 
-    val converted = Seq(lines.head, insert) ++ lines.tail
+    // val converted = Seq(lines.head, insert) ++ lines.tail
 
-    val writer = new java.io.PrintWriter(distFile)
-    writer.write(converted.mkString("\n"))
-    writer.close()
+    // val writer = new java.io.PrintWriter(distFile)
+    // writer.write(converted.mkString("\n"))
+    // writer.close()
 
     Process(command = "clasp push -f") ! logger
 
