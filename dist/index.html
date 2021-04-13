@@ -2,6 +2,18 @@
 <html>
   <head>
     <?!= HtmlService.createHtmlOutputFromFile('css').getContent(); ?>
+        <script>
+      // Prevent forms from submitting.
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+    </script>
   </head>
   <body>
     <? var config = getConfig(); ?>
@@ -39,7 +51,7 @@
           <input id="projectKey" type="text" name="projectKey" value="<?= config.projectKey ?>" tabindex="4" />
         </div>
         <div class="button-area">
-          <input type="submit" class="button" value="Start" onclick="addClickedMessage()" tabindex="5" />
+          <button class="button" value="Start" onclick="addClickedMessage()" tabindex="5" />
         </div>
       </fieldset>
     </form>

@@ -1,7 +1,7 @@
 import facade.googleappsscript.GoogleAppsScript
 import facade.googleappsscript.html.HtmlOutput
 import org.scalajs.dom
-import org.scalajs.dom.document
+import org.scalajs.dom.{document, html}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
@@ -18,18 +18,6 @@ object Main {
   @JSExportTopLevel("doGet")
   def doGet(): HtmlOutput =
     GoogleAppsScript.HtmlService.createTemplateFromFile("index").evaluate()
-
-  @JSExportTopLevel("getConfig")
-  def getConfig(): Config = {
-    val properties = GoogleAppsScript.PropertiesService.getUserProperties()
-
-    new Config {
-      override val space      = properties.getProperty("space")
-      override val domain     = properties.getProperty("domain")
-      override val apiKey     = properties.getProperty("apiKey")
-      override val projectKey = properties.getProperty("projectKey")
-    }
-  }
 
   def appendPar(targetNode: dom.Node, text: String): Unit = {
     val parNode = document.createElement("p")
@@ -51,8 +39,23 @@ object Main {
 
   @JSExportTopLevel("onLoadHandler")
   def onLoadHandler(): Unit = {
-    val webPageLoadedMessage = "Web page loaded successfully."
-    dom.window.alert(webPageLoadedMessage)
+    val config = getConfig()
+
+    config.space.foreach { _ =>
+      document.getElementById("spaceID").asInstanceOf[html.Input].value = "test"
+      println("test")
+    }
+  }
+
+  private def getConfig(): Config = {
+    val properties = GoogleAppsScript.PropertiesService.getUserProperties()
+
+    new Config {
+      override val space      = properties.getProperty("space")
+      override val domain     = properties.getProperty("domain")
+      override val apiKey     = properties.getProperty("apiKey")
+      override val projectKey = properties.getProperty("projectKey")
+    }
   }
   // @JSExportTopLevel("onOpenImpl")
   // def onOpen(): Unit = {
