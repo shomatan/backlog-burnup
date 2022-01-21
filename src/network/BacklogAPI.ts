@@ -58,14 +58,29 @@ export const fetchIssuesOfIssueType = async (
   projectId: number,
   issueTypeId: number
 ): Promise<ReadonlyArray<Issue>> => {
-  const res = await fetchBacklog('/api/v2/issues', [
-    `projectId[]=${projectId}`,
-    `issueTypeId[]=${issueTypeId}`,
-    'count=100',
-  ]);
-  const json = await res.json();
+  const count = 100;
+  let lastFetchedIssueCount = 0;
+  let allItems = [];
 
-  return json.map((item: any) => {
+  do {
+    const res = await fetchBacklog('/api/v2/issues', [
+      `projectId[]=${projectId}`,
+      `issueTypeId[]=${issueTypeId}`,
+      `count=${count}`,
+      `offset=${allItems.length}`,
+    ]);
+
+    const items = await res.json();
+    lastFetchedIssueCount = items.length;
+    allItems = allItems.concat(items);
+
+    if (allItems.length >= 1000) { // Take care about API Limit
+      break;
+    }
+  } while (lastFetchedIssueCount === count);
+
+
+  return allItems.map((item: any) => {
     const milestones = item.milestone.map((m: any) =>
       BacklogMilestone(
         m.id,
