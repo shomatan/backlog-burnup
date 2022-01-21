@@ -48,7 +48,7 @@ export const fetchMilestones = async (
         item.archived
       );
     })
-    .filter((item: BacklogMilestone) => !item.archived)
+    .filter((item: BacklogMilestone) => !item.archived && item.name.includes(process.env.MILESTONE_FILTER))
     .map((item: BacklogMilestone) => Milestone(item, 0));
 
   return Milestones(items);
